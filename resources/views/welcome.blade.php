@@ -30,22 +30,24 @@
                 <a href="#" class="hover:text-indigo-600 transition-colors">Organizer</a>
             </div>
 
-            <div class="flex items-center gap-6">
+            <div class="flex items-center gap-4">
                 @if (Route::has('login'))
                     @auth
-                        <div class="flex items-center gap-5">
-                            <a href="{{ Auth::user()->role === 'admin' ? route('admin.dashboard') : url('/dashboard') }}" 
-                               class="text-sm font-bold text-indigo-600 hover:text-indigo-800 transition py-2 px-4 bg-indigo-50 rounded-lg border border-indigo-100">
-                                Dashboard
-                            </a>
-                            <form method="POST" action="{{ route('logout') }}" class="inline">
-                                @csrf
-                                <button type="submit" class="text-sm font-bold text-gray-400 hover:text-red-600 transition">Keluar</button>
-                            </form>
-                        </div>
+                        {{-- NAVIGASI SAAT LOGIN --}}
+                        <a href="{{ Auth::user()->role === 'admin' ? route('admin.dashboard') : url('/dashboard') }}" 
+                           class="text-sm font-bold text-indigo-600 py-2 px-4 bg-indigo-50 rounded-lg border border-indigo-100 hover:bg-indigo-100 transition">
+                            Dashboard
+                        </a>
+                        <form method="POST" action="{{ route('logout') }}" class="inline">
+                            @csrf
+                            <button type="submit" class="text-sm font-bold text-gray-500 hover:text-red-600 transition">Keluar</button>
+                        </form>
                     @else
-                        <a href="{{ route('login') }}" class="text-sm font-bold text-gray-700 hover:text-indigo-600 transition">Login</a>
-                        <a href="{{ route('register') }}" class="bg-gray-900 text-white px-6 py-3 rounded-full text-sm font-bold hover:bg-indigo-600 transition-all shadow-xl active:scale-95">Register</a>
+                        {{-- NAVIGASI SAAT LOGOUT (GUEST) --}}
+                        <a href="{{ route('login') }}" class="text-sm font-bold text-gray-700 hover:text-indigo-600 transition">Masuk</a>
+                        @if (Route::has('register'))
+                            <a href="{{ route('register') }}" class="bg-gray-900 text-white px-6 py-2.5 rounded-full text-sm font-bold hover:bg-indigo-600 transition shadow-lg active:scale-95">Daftar</a>
+                        @endif
                     @endauth
                 @endif
             </div>
@@ -77,15 +79,15 @@
             <p class="text-gray-500 text-lg max-w-sm font-medium">Didesain khusus untuk memastikan keamanan dan kenyamanan transaksi Anda.</p>
         </div>
         <div class="grid md:grid-cols-3 gap-8">
-            <div class="bg-white p-10 rounded-[40px] border border-gray-100 shadow-sm">
+            <div class="bg-white p-10 rounded-[40px] border border-gray-100 shadow-sm hover:border-indigo-100 transition">
                 <h3 class="text-2xl font-bold mb-4 text-indigo-600">Admin Hub</h3>
                 <p class="text-gray-500 font-medium">Kontrol penuh verifikasi organizer dan pantau aliran dana secara transparan.</p>
             </div>
-            <div class="bg-white p-10 rounded-[40px] border border-gray-100 shadow-sm">
+            <div class="bg-white p-10 rounded-[40px] border border-gray-100 shadow-sm hover:border-emerald-100 transition">
                 <h3 class="text-2xl font-bold mb-4 text-emerald-600">Powerful Tools</h3>
                 <p class="text-gray-500 font-medium">Akses analitik penjualan tiket dan manajemen kuota real-time.</p>
             </div>
-            <div class="bg-white p-10 rounded-[40px] border border-gray-100 shadow-sm">
+            <div class="bg-white p-10 rounded-[40px] border border-gray-100 shadow-sm hover:border-orange-100 transition">
                 <h3 class="text-2xl font-bold mb-4 text-orange-600">Seamless Booking</h3>
                 <p class="text-gray-500 font-medium">Proses checkout instan untuk tiket VIP maupun Reguler.</p>
             </div>

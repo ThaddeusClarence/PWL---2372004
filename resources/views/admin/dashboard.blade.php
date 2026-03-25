@@ -49,16 +49,16 @@
                     <h3 class="font-bold text-gray-800 mb-4">Tindakan Cepat</h3>
                     <div class="space-y-3">
                         <button class="w-full bg-indigo-600 text-white py-2 rounded-lg hover:bg-indigo-700 transition font-medium text-sm">Verifikasi Penyelenggara</button>
-                        <button class="w-full border border-gray-200 text-gray-700 py-2 rounded-lg hover:bg-gray-50 transition text-sm">Kelola Semua Pengguna</button>
+                        <button class="w-full border border-gray-200 text-gray-700 py-2 rounded-lg hover:bg-gray-50 transition text-sm font-medium">Kelola Semua Pengguna</button>
                         
-                        {{-- Tombol Cetak Laporan (Pengecekan Error Otomatis) --}}
-                        @if (Route::has('admin.print.laporan'))
-                            <a href="{{ route('admin.print.laporan') }}" target="_blank" class="block w-full text-center border border-gray-200 text-gray-700 py-2 rounded-lg hover:bg-gray-50 transition text-sm font-medium">
-                                Lihat & Cetak Laporan
+                        {{-- Tombol Export PDF (Sudah Mengarah ke Route Baru) --}}
+                        @if (Route::has('admin.export.pdf'))
+                            <a href="{{ route('admin.export.pdf') }}" class="block w-full text-center border border-red-200 text-red-600 py-2 rounded-lg hover:bg-red-50 transition text-sm font-bold">
+                                Export Laporan (PDF)
                             </a>
                         @else
-                            <button class="w-full border border-gray-200 text-gray-400 py-2 rounded-lg cursor-not-allowed text-sm font-medium" title="Route belum didaftarkan di web.php">
-                                Fitur Cetak Belum Siap
+                            <button class="w-full border border-gray-200 text-gray-400 py-2 rounded-lg cursor-not-allowed text-sm font-medium" title="Jalankan composer require barryvdh/laravel-dompdf dan cek web.php">
+                                PDF Belum Terpasang
                             </button>
                         @endif
                     </div>
@@ -91,7 +91,10 @@
                                     </span>
                                 </td>
                                 <td class="px-6 py-4 text-gray-500">
-                                    {{ $user->status_akun ?? 'Aktif' }}
+                                    <span class="flex items-center gap-1.5">
+                                        <span class="w-2 h-2 rounded-full bg-green-500"></span>
+                                        {{ $user->status_akun ?? 'Aktif' }}
+                                    </span>
                                 </td>
                             </tr>
                             @empty
@@ -118,7 +121,7 @@
                     label: 'Registrasi Pengguna Baru',
                     data: [0, 0, 0, 0, 0, 0, {{ $totalUsers }}],
                     backgroundColor: '#4f46e5',
-                    borderRadius: 5
+                    borderRadius: 8
                 }]
             },
             options: {
@@ -127,7 +130,12 @@
                     legend: { display: true, position: 'bottom' }
                 },
                 scales: {
-                    y: { beginAtZero: true, ticks: { stepSize: 1 } }
+                    y: { 
+                        beginAtZero: true, 
+                        ticks: { stepSize: 1 },
+                        grid: { borderDash: [5, 5] }
+                    },
+                    x: { grid: { display: false } }
                 }
             }
         });

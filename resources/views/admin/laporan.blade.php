@@ -2,98 +2,218 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <title>Laporan EventMaster 2026</title>
-    <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        /* Desain khusus saat dicetak ke kertas atau PDF */
-        @media print {
-            .no-print { display: none !important; }
-            body { background: white !important; padding: 0 !important; }
-            .print-container { box-shadow: none !important; border: none !important; width: 100% !important; max-width: none !important; }
+        @page {
+            margin: 1cm;
+        }
+        body {
+            font-family: 'Helvetica', 'Arial', sans-serif;
+            font-size: 12px;
+            color: #333;
+            line-height: 1.5;
+            margin: 0;
+            padding: 0;
+        }
+        .header {
+            border-bottom: 4px solid #4f46e5;
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+            overflow: hidden;
+        }
+        .logo {
+            float: left;
+        }
+        .logo-text {
+            font-size: 24px;
+            font-weight: 900;
+            letter-spacing: -1px;
+            color: #111;
+            margin: 0;
+        }
+        .logo-event { color: #111; }
+        .logo-master { color: #4f46e5; }
+        .slogan {
+            font-size: 10px;
+            color: #666;
+            margin: 0;
+        }
+        .capstone {
+            font-size: 8px;
+            color: #999;
+            font-style: italic;
+            margin-top: 5px;
+        }
+        .date-info {
+            float: right;
+            text-align: right;
+        }
+        .doc-title {
+            font-size: 16px;
+            font-weight: bold;
+            color: #1f2937;
+            margin: 0;
+        }
+        .date-text {
+            color: #6b7280;
+            font-size: 10px;
+            margin: 2px 0;
+        }
+        .stats-grid {
+            width: 100%;
+            margin-bottom: 30px;
+            border-spacing: 10px 0;
+            margin-left: -10px;
+        }
+        .stats-card {
+            border: 1px solid #e5e7eb;
+            padding: 10px;
+            border-radius: 4px;
+            width: 33.33%;
+        }
+        .stats-label {
+            font-size: 8px;
+            text-transform: uppercase;
+            font-weight: bold;
+            color: #9ca3af;
+            margin: 0;
+        }
+        .stats-value {
+            font-size: 14px;
+            font-weight: bold;
+            color: #111;
+            margin: 5px 0 0 0;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 50px;
+        }
+        th {
+            background-color: #f9fafb;
+            color: #4b5563;
+            font-size: 9px;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            text-align: left;
+            padding: 10px 15px;
+            border: 1px solid #e5e7eb;
+        }
+        td {
+            padding: 10px 15px;
+            border: 1px solid #e5e7eb;
+            font-size: 11px;
+        }
+        .text-bold { font-weight: bold; }
+        .role-badge {
+            font-size: 8px;
+            padding: 2px 6px;
+            border-radius: 99px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+        .role-admin { background-color: #fee2e2; color: #b91c1c; }
+        .role-organizer { background-color: #dbeafe; color: #1e40af; }
+        .role-customer { background-color: #f3f4f6; color: #374151; }
+        .footer {
+            margin-top: 50px;
+            overflow: hidden;
+        }
+        .signature-box {
+            float: right;
+            width: 180px;
+            text-align: center;
+        }
+        .signature-line {
+            border-top: 1px solid #111;
+            padding-top: 8px;
+            margin-top: 60px;
+        }
+        .signature-title {
+            font-size: 9px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+        .signature-name {
+            font-size: 8px;
+            color: #666;
+            margin-top: 5px;
+        }
+        .page-break {
+            page-break-after: always;
         }
     </style>
 </head>
-<body class="bg-gray-100 p-10">
-
-    <div class="print-container max-w-4xl mx-auto bg-white p-10 shadow-lg border border-gray-200 rounded-sm">
-        <div class="border-b-4 border-indigo-600 pb-6 mb-8 flex justify-between items-start">
-            <div>
-                <h1 class="text-3xl font-black tracking-tighter text-gray-900">EVENT<span class="text-indigo-600">MASTER</span></h1>
-                <p class="text-sm text-gray-500 font-medium">Platform Manajemen Event Masa Depan</p>
-                <p class="text-xs text-gray-400 mt-1 italic">Capstone Project 2026 - Thaddeus Clarence</p>
-            </div>
-            <div class="text-right text-sm">
-                <h2 class="font-bold text-lg text-gray-800">LAPORAN DATA PENGGUNA</h2>
-                <p class="text-gray-500">Tanggal Cetak: {{ now()->format('d F Y') }}</p>
-                <p class="text-gray-500">Waktu: {{ now()->format('H:i') }} WIB</p>
-            </div>
+<body>
+    <div class="header">
+        <div class="logo">
+            <h1 class="logo-text"><span class="logo-event">EVENT</span><span class="logo-master">MASTER</span></h1>
+            <p class="slogan">Platform Manajemen Event Masa Depan</p>
+            <p class="capstone">Capstone Project 2026 - Thaddeus Clarence</p>
         </div>
-
-        <div class="grid grid-cols-3 gap-4 mb-8">
-            <div class="border p-3 rounded">
-                <p class="text-[10px] uppercase font-bold text-gray-400">Total Pengguna</p>
-                <p class="text-lg font-bold">{{ $recentUsers->count() }} Terdaftar Baru</p>
-            </div>
-            <div class="border p-3 rounded text-center">
-                <p class="text-[10px] uppercase font-bold text-gray-400">Status Sistem</p>
-                <p class="text-lg font-bold text-green-600">Aktif</p>
-            </div>
-            <div class="border p-3 rounded text-right">
-                <p class="text-[10px] uppercase font-bold text-gray-400">Dicetak Oleh</p>
-                <p class="text-lg font-bold">{{ Auth::user()->name }}</p>
-            </div>
-        </div>
-
-        <table class="w-full text-left border-collapse border border-gray-200">
-            <thead>
-                <tr class="bg-gray-50 text-gray-700 text-xs uppercase tracking-wider">
-                    <th class="border border-gray-200 px-4 py-3">Nama Lengkap</th>
-                    <th class="border border-gray-200 px-4 py-3">Email</th>
-                    <th class="border border-gray-200 px-4 py-3">Peran</th>
-                    <th class="border border-gray-200 px-4 py-3">Status</th>
-                </tr>
-            </thead>
-            <tbody class="text-sm text-gray-600">
-                @forelse($recentUsers as $user)
-                <tr class="hover:bg-gray-50">
-                    <td class="border border-gray-200 px-4 py-3 font-medium text-gray-900">{{ $user->name }}</td>
-                    <td class="border border-gray-200 px-4 py-3">{{ $user->email }}</td>
-                    <td class="border border-gray-200 px-4 py-3 font-bold uppercase text-[10px]">{{ $user->role }}</td>
-                    <td class="border border-gray-200 px-4 py-3">Aktif</td>
-                </tr>
-                @empty
-                <tr>
-                    <td colspan="4" class="border border-gray-200 px-4 py-8 text-center text-gray-400">Tidak ada data untuk ditampilkan.</td>
-                </tr>
-                @endforelse
-            </tbody>
-        </table>
-
-        <div class="mt-16 flex justify-end">
-            <div class="text-center w-48 border-t border-gray-800 pt-2">
-                <p class="text-xs font-bold uppercase">Administrator</p>
-                <p class="text-[10px] text-gray-400 mt-10">{{ Auth::user()->name }}</p>
-            </div>
-        </div>
-
-        <div class="no-print mt-10 flex gap-3 justify-center">
-            <button onclick="window.print()" class="bg-indigo-600 text-white px-8 py-3 rounded-xl font-bold shadow-lg hover:bg-indigo-700 transition active:scale-95">
-                Cetak Ulang (Ctrl + P)
-            </button>
-            <button onclick="window.close()" class="border border-gray-300 text-gray-600 px-8 py-3 rounded-xl font-bold hover:bg-gray-50 transition">
-                Tutup Halaman
-            </button>
+        <div class="date-info">
+            <h2 class="doc-title">LAPORAN DATA PENGGUNA</h2>
+            <p class="date-text">Tanggal Cetak: {{ now()->format('d F Y') }}</p>
+            <p class="date-text">Waktu: {{ now()->format('H:i') }} WIB</p>
         </div>
     </div>
 
-    <script>
-        window.onload = function() {
-            // Memberi sedikit jeda agar CSS ter-load sempurna sebelum dialog print muncul
-            setTimeout(() => {
-                window.print();
-            }, 500);
-        }
-    </script>
+    <table class="stats-grid">
+        <tr>
+            <td class="stats-card">
+                <p class="stats-label">Total Pengguna</p>
+                <p class="stats-value">{{ $recentUsers->count() }} Terdaftar Baru</p>
+            </td>
+            <td class="stats-card" style="text-align: center;">
+                <p class="stats-label">Status Sistem</p>
+                <p class="stats-value" style="color: #059669;">Aktif</p>
+            </td>
+            <td class="stats-card" style="text-align: right;">
+                <p class="stats-label">Dicetak Oleh</p>
+                <p class="stats-value">{{ Auth::check() ? Auth::user()->name : 'System' }}</p>
+            </td>
+        </tr>
+    </table>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Nama Lengkap</th>
+                <th>Email</th>
+                <th>Peran</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            @forelse($recentUsers as $user)
+            <tr>
+                <td class="text-bold">{{ $user->name }}</td>
+                <td>{{ $user->email }}</td>
+                <td>
+                    <span class="role-badge @if($user->role == 'admin') role-admin @elseif($user->role == 'organizer') role-organizer @else role-customer @endif">
+                        {{ $user->role }}
+                    </span>
+                </td>
+                <td>Aktif</td>
+            </tr>
+            @empty
+            <tr>
+                <td colspan="4" style="text-align: center; color: #999; font-style: italic; padding: 30px;">
+                    Tidak ada data untuk ditampilkan.
+                </td>
+            </tr>
+            @endforelse
+        </tbody>
+    </table>
+
+    <div class="footer">
+        <div class="signature-box">
+            <div class="signature-line">
+                <p class="signature-title">Administrator Utama</p>
+                <p class="signature-name">{{ Auth::check() ? Auth::user()->name : 'Admin System' }}</p>
+            </div>
+        </div>
+    </div>
 </body>
 </html>

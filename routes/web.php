@@ -4,7 +4,8 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\AdminController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
-use App\Models\User; // Penting untuk mengambil data user di route laporan
+use App\Models\User;
+use Barryvdh\DomPDF\Facade\Pdf; // IMPORT WAJIB UNTUK PDF
 
 // 1. Halaman Utama
 Route::get('/', function () {
@@ -19,19 +20,22 @@ Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
-// 3. Route Khusus Admin & Fitur Laporan
+// 3. Route Khusus Admin & Fitur Export PDF
 Route::middleware(['auth'])->group(function () {
     // Halaman Dashboard Admin Utama
     Route::get('/admin/dashboard', [AdminController::class, 'index'])->name('admin.dashboard');
 
-    // Fitur Cetak Laporan Otomatis (Menggantikan pesan "Sedang Disiapkan")
-    Route::get('/admin/print-laporan', function () {
-        // Mengambil 20 data pengguna terbaru untuk laporan
+    // FITUR EXPORT PDF (Klik langsung download)
+    Route::get('/admin/export-pdf', function () {
+        // Ambil 20 user terbaru
         $recentUsers = User::latest()->take(20)->get();
         
-        // Memanggil file resources/views/admin/laporan.blade.php
-        return view('admin.laporan', compact('recentUsers'));
-    })->name('admin.print.laporan');
+        // Load view laporan.blade.php dan masukkan datanya
+        $pdf = Pdf::loadView('admin.laporan', compact('recentUsers'));
+        
+        // Download file dengan nama ini
+        return $pdf->download('Laporan_User_EventMaster.pdf');
+    })->name('admin.export.pdf');
 });
 
 // 4. Route Profile (Bawaan Laravel Breeze)

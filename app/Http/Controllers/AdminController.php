@@ -38,10 +38,10 @@ class AdminController extends Controller
      */
     public function printLaporan()
     {
-        // Mengambil semua data user dari tabel users
-        $users = User::all(); 
+        // Mengambil 100 data user terbaru
+        $recentUsers = User::latest()->take(100)->get(); 
 
-        // Mengarahkan ke file view laporan yang kita buat tadi
-        return view('admin.print-laporan', compact('users'));
+        // Mengarahkan ke file view laporan
+        return view('admin.laporan', compact('recentUsers'));
     }
 }
