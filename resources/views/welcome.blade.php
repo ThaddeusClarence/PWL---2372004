@@ -3,123 +3,136 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EventMaster - Platform Manajemen Event & Tiket</title>
+    <title>EventMaster - Transformasi Manajemen Event</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Inter', sans-serif; scroll-behavior: smooth; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; scroll-behavior: smooth; }
+        .glass-nav { background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(12px); border-bottom: 1px solid rgba(229, 231, 235, 0.5); }
+        .hero-gradient { background: radial-gradient(circle at top right, #4f46e5, #312e81, #0f172a); }
+        .text-gradient { background: linear-gradient(to right, #818cf8, #c084fc, #fb7185); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
     </style>
 </head>
-<body class="bg-gray-50 text-gray-900">
+<body class="bg-[#fcfcfd] text-[#1a1c21]">
 
-    <nav class="bg-white shadow-sm sticky top-0 z-50">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between h-16 items-center">
-                <div class="flex-shrink-0 flex items-center">
-                    <span class="text-2xl font-bold text-indigo-600 tracking-tight">EventMaster</span>
+    <nav class="glass-nav sticky top-0 z-[100]">
+        <div class="max-w-7xl mx-auto px-6 h-20 flex justify-between items-center">
+            <div class="flex items-center gap-2">
+                <div class="w-10 h-10 bg-indigo-600 rounded-xl flex items-center justify-center shadow-lg shadow-indigo-200">
+                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 5v2m0 4v2m0 4v2M5 5a2 2 0 012-2h10a2 2 0 012 2v14a2 2 0 01-2 2H7a2 2 0 01-2-2V5z"></path></svg>
                 </div>
-                
-                <div class="hidden md:flex space-x-8 font-medium">
-                    <a href="#explore" class="text-gray-600 hover:text-indigo-600 transition">Jelajah Event</a>
-                    <a href="#" class="text-gray-600 hover:text-indigo-600 transition">Kategori</a>
-                    <a href="#" class="text-gray-600 hover:text-indigo-600 transition">Organizer</a>
-                </div>
+                <span class="text-xl font-extrabold tracking-tight text-gray-900">Event<span class="text-indigo-600">Master</span></span>
+            </div>
+            
+            <div class="hidden md:flex items-center space-x-10 text-sm font-semibold text-gray-600">
+                <a href="#explore" class="hover:text-indigo-600 transition-colors">Jelajah</a>
+                <a href="#" class="hover:text-indigo-600 transition-colors">Kategori</a>
+                <a href="#" class="hover:text-indigo-600 transition-colors">Organizer</a>
+            </div>
 
-                <div class="flex items-center space-x-4">
-                    @if (Route::has('login'))
-                        @auth
-                            <a href="{{ url('/dashboard') }}" class="text-indigo-600 font-semibold hover:underline">Dashboard</a>
+            <div class="flex items-center gap-6">
+                @if (Route::has('login'))
+                    @auth
+                        {{-- Tampilan saat user sudah Login --}}
+                        <div class="flex items-center gap-5">
+                            <a href="{{ url('/dashboard') }}" class="text-sm font-bold text-indigo-600 hover:text-indigo-800 transition">Dashboard</a>
+                            
                             <form method="POST" action="{{ route('logout') }}" class="inline">
                                 @csrf
-                                <button type="submit" class="text-sm text-gray-500 hover:text-red-600">Logout</button>
+                                <button type="submit" class="text-sm font-bold text-gray-500 hover:text-red-600 transition">
+                                    Log Out
+                                </button>
                             </form>
-                        @else
-                            <a href="{{ route('login') }}" class="text-gray-700 font-medium hover:text-indigo-600">Login</a>
-                            @if (Route::has('register'))
-                                <a href="{{ route('register') }}" class="bg-indigo-600 text-white px-5 py-2.5 rounded-xl font-medium hover:bg-indigo-700 shadow-lg shadow-indigo-200 transition-all active:scale-95">
-                                    Daftar Sekarang
-                                </a>
-                            @endif
-                        @endauth
-                    @endif
-                </div>
+                        </div>
+                    @else
+                        {{-- Tampilan saat user belum Login --}}
+                        <a href="{{ route('login') }}" class="text-sm font-bold text-gray-700 hover:text-indigo-600 transition">Login</a>
+                        <a href="{{ route('register') }}" class="bg-gray-900 text-white px-6 py-3 rounded-full text-sm font-bold hover:bg-indigo-600 transition-all shadow-xl shadow-gray-200 active:scale-95">
+                            Register
+                        </a>
+                    @endauth
+                @endif
             </div>
         </div>
     </nav>
 
-    <header class="relative bg-indigo-900 pt-32 pb-24 px-4 overflow-hidden">
-        <div class="max-w-7xl mx-auto relative z-10 text-center">
-            <span class="inline-block py-1 px-3 rounded-full bg-indigo-500/20 text-indigo-300 text-sm font-medium mb-5 border border-indigo-500/30">
-                Capstone Project 1
-            </span>
-            <h1 class="text-5xl md:text-7xl font-extrabold text-white mb-8 tracking-tight">
-                Kelola Event Jadi <br> <span class="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-purple-400">Lebih Mudah</span>
+    <header class="hero-gradient pt-24 pb-32 px-6 relative overflow-hidden">
+        <div class="absolute top-20 right-[10%] w-64 h-64 bg-indigo-500/20 rounded-full blur-[80px] animate-pulse"></div>
+        <div class="absolute bottom-10 left-[5%] w-80 h-80 bg-purple-500/20 rounded-full blur-[100px]"></div>
+
+        <div class="max-w-7xl mx-auto text-center relative z-10">
+            <div class="inline-flex items-center gap-2 py-2 px-4 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-indigo-200 text-xs font-bold uppercase tracking-widest mb-10">
+                <span class="relative flex h-2 w-2">
+                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-indigo-400 opacity-75"></span>
+                    <span class="relative inline-flex rounded-full h-2 w-2 bg-indigo-400"></span>
+                </span>
+                Capstone Project 2026
+            </div>
+
+            <h1 class="text-5xl md:text-8xl font-[900] text-white leading-[1.1] tracking-tight mb-8">
+                Kelola Event Jadi <br> <span class="text-gradient">Jauh Lebih Mudah</span>
             </h1>
-            <p class="text-indigo-100 text-lg md:text-xl max-w-2xl mx-auto mb-12 leading-relaxed">
-                Platform ticketing All-in-One untuk Admin, Organizer, dan Customer. Dari pembuatan event hingga scan QR Code tiket.
+
+            <p class="text-indigo-100/80 text-lg md:text-xl max-w-2xl mx-auto mb-14 leading-relaxed font-medium">
+                Satu ekosistem untuk <span class="text-white">Admin</span>, <span class="text-white">Organizer</span>, dan <span class="text-white">Customer</span>. Bangun pengalaman event tak terlupakan dalam hitungan klik.
             </p>
-            <div class="flex flex-col sm:flex-row justify-center gap-5">
-                <a href="#explore" class="bg-indigo-500 text-white px-10 py-4 rounded-2xl font-bold text-lg hover:bg-indigo-400 shadow-xl shadow-indigo-500/20 transition-all">
-                    Cari Event
+
+            <div class="flex flex-col sm:flex-row justify-center items-center gap-6">
+                <a href="#explore" class="w-full sm:w-auto bg-white text-indigo-900 px-10 py-5 rounded-2xl font-extrabold text-lg hover:shadow-[0_20px_50px_rgba(255,255,255,0.2)] transition-all hover:-translate-y-1 active:scale-95">
+                    Temukan Event
                 </a>
-                <a href="{{ route('register') }}" class="bg-white/10 backdrop-blur-md text-white border border-white/20 px-10 py-4 rounded-2xl font-bold text-lg hover:bg-white/20 transition-all">
-                    Jadi Organizer
+                <a href="{{ route('register') }}" class="w-full sm:w-auto bg-indigo-500/20 backdrop-blur-xl text-white border border-white/30 px-10 py-5 rounded-2xl font-extrabold text-lg hover:bg-white/10 transition-all active:scale-95">
+                    Daftar Organizer
                 </a>
             </div>
         </div>
-        
-        <div class="absolute top-0 right-0 -mr-24 -mt-24 w-128 h-128 bg-indigo-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-pulse"></div>
-        <div class="absolute bottom-0 left-0 -ml-24 -mb-24 w-128 h-128 bg-purple-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20"></div>
     </header>
 
-    <section id="explore" class="py-24 max-w-7xl mx-auto px-4">
-        <div class="text-center mb-20">
-            <h2 class="text-4xl font-bold text-gray-900">Satu Platform, Tiga Peran</h2>
-            <p class="text-gray-500 mt-4 text-lg">Didesain khusus untuk memenuhi kebutuhan ekosistem event.</p>
+    <section id="explore" class="py-32 max-w-7xl mx-auto px-6">
+        <div class="flex flex-col md:flex-row justify-between items-end mb-20 gap-6">
+            <div class="max-w-xl">
+                <h2 class="text-4xl md:text-5xl font-extrabold text-gray-900 tracking-tight">Satu Platform,<br>Ekosistem Lengkap.</h2>
+            </div>
+            <p class="text-gray-500 text-lg max-w-sm font-medium">
+                Didesain khusus menggunakan teknologi terkini untuk memastikan keamanan dan kenyamanan transaksi Anda.
+            </p>
         </div>
 
-        <div class="grid md:grid-cols-3 gap-10">
-            <div class="group bg-white p-10 rounded-3xl shadow-sm border border-gray-100 hover:shadow-2xl hover:-translate-y-2 transition-all duration-300">
-                <div class="w-14 h-14 bg-indigo-50 text-indigo-600 rounded-2xl flex items-center justify-center mb-8 group-hover:bg-indigo-600 group-hover:text-white transition-colors">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                    </svg>
+        <div class="grid md:grid-cols-3 gap-8">
+            <div class="group bg-white p-10 rounded-[40px] border border-gray-100 shadow-[0_10px_40px_-15px_rgba(0,0,0,0.05)] hover:shadow-[0_30px_60px_-15px_rgba(79,70,229,0.15)] transition-all duration-500">
+                <div class="w-16 h-16 bg-indigo-50 text-indigo-600 rounded-2xl flex items-center justify-center mb-10 group-hover:scale-110 transition-transform duration-500">
+                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"></path></svg>
                 </div>
-                <h3 class="text-2xl font-bold mb-4 text-gray-800">Admin Panel</h3>
-                <p class="text-gray-600 leading-relaxed">Kelola kategori, verifikasi organizer, dan pantau seluruh transaksi platform secara real-time.</p>
+                <h3 class="text-2xl font-bold mb-4">Admin Hub</h3>
+                <p class="text-gray-500 leading-relaxed font-medium">Kontrol penuh verifikasi organizer dan pantau aliran dana secara transparan dalam satu dashboard pusat.</p>
             </div>
 
-            <div class="group bg-white p-10 rounded-3xl shadow-sm border border-gray-100 hover:shadow-2xl hover:-translate-y-2 transition-all duration-300">
-                <div class="w-14 h-14 bg-emerald-50 text-emerald-600 rounded-2xl flex items-center justify-center mb-8 group-hover:bg-emerald-600 group-hover:text-white transition-colors">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-                    </svg>
+            <div class="group bg-white p-10 rounded-[40px] border border-gray-100 shadow-[0_10px_40px_-15px_rgba(0,0,0,0.05)] hover:shadow-[0_30px_60px_-15px_rgba(16,185,129,0.15)] transition-all duration-500">
+                <div class="w-16 h-16 bg-emerald-50 text-emerald-600 rounded-2xl flex items-center justify-center mb-10 group-hover:scale-110 transition-transform duration-500">
+                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>
                 </div>
-                <h3 class="text-2xl font-bold mb-4 text-gray-800">Organizer Tools</h3>
-                <p class="text-gray-600 leading-relaxed">Buat event, atur kuota tiket, dan analisis performa penjualan dengan grafik yang interaktif.</p>
+                <h3 class="text-2xl font-bold mb-4">Powerful Tools</h3>
+                <p class="text-gray-500 leading-relaxed font-medium">Buka akses ke fitur analitik penjualan tiket dan manajemen kuota real-time untuk organizer profesional.</p>
             </div>
 
-            <div class="group bg-white p-10 rounded-3xl shadow-sm border border-gray-100 hover:shadow-2xl hover:-translate-y-2 transition-all duration-300">
-                <div class="w-14 h-14 bg-orange-50 text-orange-600 rounded-2xl flex items-center justify-center mb-8 group-hover:bg-orange-600 group-hover:text-white transition-colors">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
-                    </svg>
+            <div class="group bg-white p-10 rounded-[40px] border border-gray-100 shadow-[0_10px_40px_-15px_rgba(0,0,0,0.05)] hover:shadow-[0_30px_60px_-15px_rgba(249,115,22,0.15)] transition-all duration-500">
+                <div class="w-16 h-16 bg-orange-50 text-orange-600 rounded-2xl flex items-center justify-center mb-10 group-hover:scale-110 transition-transform duration-500">
+                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 5v2m0 4v2m0 4v2M5 5a2 2 0 012-2h10a2 2 0 012 2v14a2 2 0 01-2 2H7a2 2 0 01-2-2V5z"></path></svg>
                 </div>
-                <h3 class="text-2xl font-bold mb-4 text-gray-800">Customer Experience</h3>
-                <p class="text-gray-600 leading-relaxed">Pesan tiket VIP/Reguler dengan mudah, bayar instan, dan terima e-ticket ber-QR Code di email.</p>
+                <h3 class="text-2xl font-bold mb-4">Seamless Booking</h3>
+                <p class="text-gray-500 leading-relaxed font-medium">Customer dapat memilih tiket VIP atau Reguler dengan proses checkout yang instan dan aman.</p>
             </div>
         </div>
     </section>
 
-    <footer class="bg-white border-t border-gray-100 py-12">
-        <div class="max-w-7xl mx-auto px-4 flex flex-col md:flex-row justify-between items-center">
-            <div class="mb-4 md:mb-0">
-                <span class="text-xl font-bold text-indigo-600">EventMaster</span>
-                <p class="text-sm text-gray-400 mt-1">Sistem Manajemen Event Terintegrasi</p>
+    <footer class="bg-gray-50 py-20 border-t border-gray-200">
+        <div class="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-8">
+            <div>
+                <span class="text-2xl font-black tracking-tighter">EVENT<span class="text-indigo-600">MASTER</span></span>
+                <p class="text-gray-400 text-sm mt-2 font-medium">Platform Manajemen Event Masa Depan</p>
             </div>
-            <div class="text-gray-500 text-sm">
-                &copy; 2026 Capstone Project 2372004 - Thaddeus Clarence
+            <div class="text-gray-400 text-sm font-semibold">
+                &copy; 2026 Thaddeus Clarence. Capstone Project 2372004.
             </div>
         </div>
     </footer>
