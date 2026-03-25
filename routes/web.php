@@ -7,8 +7,11 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use Barryvdh\DomPDF\Facade\Pdf; // IMPORT WAJIB UNTUK PDF
 
-// 1. Halaman Utama
+// 1. Halaman Utama (Redirect ke Dashboard jika sudah login)
 Route::get('/', function () {
+    if (Auth::check()) {
+        return redirect()->route('dashboard');
+    }
     return view('welcome');
 });
 

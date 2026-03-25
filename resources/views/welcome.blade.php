@@ -34,14 +34,17 @@
                 @if (Route::has('login'))
                     @auth
                         {{-- NAVIGASI SAAT LOGIN --}}
-                        <a href="{{ Auth::user()->role === 'admin' ? route('admin.dashboard') : url('/dashboard') }}" 
-                           class="text-sm font-bold text-indigo-600 py-2 px-4 bg-indigo-50 rounded-lg border border-indigo-100 hover:bg-indigo-100 transition">
-                            Dashboard
-                        </a>
-                        <form method="POST" action="{{ route('logout') }}" class="inline">
-                            @csrf
-                            <button type="submit" class="text-sm font-bold text-gray-500 hover:text-red-600 transition">Keluar</button>
-                        </form>
+                        <div class="flex items-center gap-3">
+                            <span class="text-sm font-medium text-gray-500">Halo, {{ Auth::user()->name }}</span>
+                            <a href="{{ Auth::user()->role === 'admin' ? route('admin.dashboard') : url('/dashboard') }}" 
+                               class="text-sm font-bold text-indigo-600 py-2 px-4 bg-indigo-50 rounded-lg border border-indigo-100 hover:bg-indigo-100 transition">
+                                Dashboard
+                            </a>
+                            <form method="POST" action="{{ route('logout') }}" class="inline">
+                                @csrf
+                                <button type="submit" class="text-sm font-bold text-gray-400 hover:text-red-500 transition">Keluar</button>
+                            </form>
+                        </div>
                     @else
                         {{-- NAVIGASI SAAT LOGOUT (GUEST) --}}
                         <a href="{{ route('login') }}" class="text-sm font-bold text-gray-700 hover:text-indigo-600 transition">Masuk</a>
