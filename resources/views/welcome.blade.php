@@ -38,6 +38,7 @@
             </div>
 
             <div class="flex gap-4 items-center">
+                {{-- Tombol Dashboard & Keluar (Muncul jika sedang login) --}}
                 @auth
                     <div class="flex items-center gap-4 bg-gray-50 border border-gray-100 p-1.5 rounded-2xl pl-5 shadow-sm">
                         <span class="text-[10px] font-black text-gray-400 uppercase tracking-widest hidden md:inline">{{ Auth::user()->name }}</span>
@@ -45,16 +46,19 @@
                             <a href="{{ Auth::user()->role === 'admin' ? route('admin.dashboard') : (Auth::user()->role === 'organizer' ? route('organizer.dashboard') : route('customer.dashboard')) }}" class="btn-premium px-6 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest">Dashboard</a>
                             <form method="POST" action="{{ route('logout') }}" class="inline">
                                 @csrf
-                                <button type="submit" class="p-2.5 bg-white text-gray-400 hover:text-red-500 rounded-xl transition-all border border-transparent hover:border-red-100 italic" title="Keluar">
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
+                                <button type="submit" class="px-4 py-2.5 bg-red-50 text-red-600 hover:bg-red-600 hover:text-white rounded-xl transition-all text-[10px] font-black uppercase tracking-widest">
+                                    Keluar
                                 </button>
                             </form>
                         </div>
                     </div>
-                @else
+                @endauth
+
+                {{-- Tombol Masuk & Daftar (SEKARANG SELALU ADA) --}}
+                <div class="flex items-center gap-2">
                     <a href="{{ route('login') }}" class="px-6 py-3 text-xs font-black text-gray-400 hover:text-indigo-600 transition uppercase tracking-widest">Masuk</a>
                     <a href="{{ route('register') }}" class="btn-premium px-8 py-3 rounded-xl text-xs font-black uppercase tracking-widest">Daftar</a>
-                @endauth
+                </div>
             </div>
         </div>
     </nav>
@@ -99,54 +103,6 @@
         </div>
     </section>
 
-    <!-- Explore Events Section -->
-    <section id="explore" class="py-32 px-6 bg-[#F8FAFC]">
-        <div class="max-w-7xl mx-auto">
-            <div class="flex flex-col md:flex-row justify-between items-end mb-20">
-                <div class="max-w-2xl">
-                    <span class="text-indigo-600 font-black tracking-[0.2em] text-[10px] uppercase mb-4 block italic">Tersedia Sekarang</span>
-                    <h2 class="text-5xl font-black text-gray-900 leading-tight">Jelajahi Event <br> <span class="text-indigo-600 italic font-serif">Pilihan</span> Terbaik.</h2>
-                </div>
-                <p class="text-gray-400 font-medium max-w-sm mb-2 text-sm leading-relaxed italic">Temukan pengalaman tak terlupakan dari berbagai kategori event premium yang kami kurasi khusus untuk anda.</p>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
-                @forelse($events as $event)
-                <div class="group bg-white rounded-[40px] border border-gray-100 shadow-[0_25px_60px_-15px_rgba(0,0,0,0.08)] overflow-hidden hover:shadow-[0_40px_100px_-20px_rgba(79,70,229,0.2)] transition-all duration-700 hover:-translate-y-4">
-                    <div class="relative h-64 overflow-hidden">
-                        <img src="{{ $event->banner ? asset('storage/' . $event->banner) : 'https://images.unsplash.com/photo-1540575861501-7cf05a4b125a?auto=format&fit=crop&q=80&w=800' }}" 
-                             class="w-full h-full object-cover transition duration-700 group-hover:scale-110">
-                        <div class="absolute top-6 right-6 px-4 py-1.5 bg-white/90 backdrop-blur-md rounded-full text-[10px] font-black text-indigo-600 shadow-sm uppercase tracking-widest">
-                            {{ $event->category }}
-                        </div>
-                    </div>
-                    <div class="p-10">
-                        <h3 class="text-2xl font-black mb-4 text-gray-900 group-hover:text-indigo-600 transition tracking-tight">{{ $event->title }}</h3>
-                        <div class="flex items-center gap-4 mb-8">
-                            <div class="px-3 py-1 bg-indigo-50 rounded-xl text-indigo-600 text-[10px] font-black uppercase tracking-widest whitespace-nowrap">
-                                {{ \Carbon\Carbon::parse($event->date)->format('d M Y') }}
-                            </div>
-                            <span class="text-xs font-bold text-gray-300 italic truncate">{{ $event->location }}</span>
-                        </div>
-                        <div class="flex justify-between items-center pt-8 border-t border-gray-50">
-                            <div>
-                                <span class="text-[9px] font-black text-gray-300 block uppercase tracking-widest">Mulai Dari</span>
-                                <span class="text-xl font-black text-gray-900 tracking-tighter">Rp{{ number_format($event->price, 0, ',', '.') }}</span>
-                            </div>
-                            <a href="{{ route('events.show', $event->id) }}" class="w-14 h-14 bg-gray-900 rounded-2xl text-white flex items-center justify-center hover:bg-indigo-600 transition-all active:scale-90 shadow-lg shadow-gray-100 group-hover:rotate-12">
-                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-                @empty
-                <div class="col-span-3 py-20 bg-white rounded-[40px] border-2 border-dashed border-gray-100 text-center">
-                    <p class="text-gray-300 font-black uppercase tracking-[0.2em] italic">Belum ada event yang tersedia saat ini.</p>
-                </div>
-                @endforelse
-            </div>
-        </div>
-    </section>
 
     <!-- Services Section -->
     <section id="features" class="py-32 px-6">

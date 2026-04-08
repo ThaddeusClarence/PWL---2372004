@@ -12,8 +12,7 @@ use Barryvdh\DomPDF\Facade\Pdf; // IMPORT WAJIB UNTUK PDF
 
 // 1. Halaman Utama (Tampilkan Event Terbaru)
 Route::get('/', function () {
-    $events = \App\Models\Event::latest()->take(6)->get();
-    return view('welcome', compact('events'));
+    return view('welcome');
 });
 
 // Route Detail Event (Publik)

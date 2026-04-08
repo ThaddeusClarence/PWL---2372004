@@ -17,21 +17,22 @@ class CustomerController extends Controller
     public function index()
     {
         $user = Auth::user();
-        $tickets = Ticket::where('user_id', $user->id)
-            ->with(['ticketType.event'])
+        
+        // Ambil Riwayat Transaksi (Semua Order)
+        $orders = Order::where('user_id', $user->id)
+            ->with(['event', 'tickets.ticketType'])
             ->latest()
             ->get();
-            
+
+        // Ambil statistik tiket (opsional untuk dashboard)
+        $tickets = Ticket::where('user_id', $user->id)->get();
         $activeTicketCount = $tickets->where('is_used', false)->count();
         $usedTicketCount = $tickets->where('is_used', true)->count();
-        
-        // Tambahkan Event Terbaru untuk dibeli oleh Customer
-        $events = \App\Models\Event::latest()->take(6)->get();
 
-        // Ambil Riwayat Transaksi (Semua Order)
-        $orders = Order::where('user_id', $user->id)->with('event')->latest()->get();
+        // Ambil daftar event untuk dibeli (Pindah dari Front Page)
+        $events = Event::latest()->get();
 
-        return view('customer.dashboard', compact('tickets', 'activeTicketCount', 'usedTicketCount', 'events', 'orders'));
+        return view('customer.dashboard', compact('orders', 'events', 'activeTicketCount', 'usedTicketCount'));
     }
 
     public function showTicket(Order $order)
