@@ -16,8 +16,8 @@
                 <div class="w-20 h-20 bg-indigo-600 rounded-[30px] flex items-center justify-center mx-auto mb-6 shadow-2xl shadow-indigo-100 rotate-6">
                     <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z"></path></svg>
                 </div>
-                <h1 class="text-4xl font-black text-gray-900 mb-2">Simulasi Scan Tiket</h1>
-                <p class="text-gray-400 font-medium">Verifikasi keaslian dan status tiket melalui kode unik.</p>
+                <h1 class="text-4xl font-black text-gray-900 mb-2">Verifikasi Tiket</h1>
+                <p class="text-gray-400 font-medium italic">Gunakan fitur ini untuk validasi kehadiran di lokasi event.</p>
             </div>
 
             @if(session('success'))
@@ -26,8 +26,13 @@
                     <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>
                 </div>
                 <div>
-                    <h3 class="text-xl font-bold text-emerald-900">{{ session('success') }}</h3>
-                    <p class="text-emerald-700/70 font-medium text-sm mt-1">Check-in berhasil. Izinkan tamu masuk.</p>
+                    <h3 class="text-xl font-black text-emerald-900">{{ session('success') }}</h3>
+                    <p class="text-emerald-700 font-bold text-sm mt-1 uppercase tracking-wider">
+                        Atas Nama: <span class="text-gray-900 underline">{{ session('owner_name') }}</span>
+                    </p>
+                    <p class="text-[10px] font-black text-emerald-600/70 mt-2 uppercase tracking-[0.2em]">
+                        Kategori: {{ session('ticket_type') }} • Status: Check-in Berhasil
+                    </p>
                 </div>
             </div>
             @endif

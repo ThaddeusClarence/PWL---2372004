@@ -9,9 +9,9 @@
         }
     </style>
 
-    <div class="font-ticket bg-[#F9FAFB] min-h-screen py-12 px-4 no-print">
+    <div class="font-ticket bg-[#F9FAFB] min-h-screen py-12 px-4">
         <div class="max-w-xl mx-auto">
-            <div class="flex justify-between items-center mb-8">
+            <div class="flex justify-between items-center mb-8 no-print">
                 <a href="{{ route('customer.dashboard') }}" class="flex items-center gap-2 text-sm font-bold text-gray-500 hover:text-indigo-600 transition">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"></path></svg>
                     Kembali ke Dashboard
@@ -51,16 +51,26 @@
                     </div>
 
                     <div class="flex flex-col items-center justify-center py-10 bg-gray-50 rounded-[32px] border-2 border-dashed border-gray-200">
-                        <p class="text-[10px] uppercase font-black text-indigo-600 tracking-[0.3em] mb-6 italic">Scan barcode untuk verifikasi</p>
-                        
-                        <div class="bg-white p-6 rounded-3xl shadow-xl mb-6">
-                            {!! QrCode::size(200)->generate($order->tickets->first()->ticket_code) !!}
-                        </div>
+                        @if($order->tickets->count() > 0)
+                            <p class="text-[10px] uppercase font-black text-indigo-600 tracking-[0.3em] mb-6 italic">Scan barcode untuk verifikasi</p>
+                            
+                            <div class="bg-white p-6 rounded-3xl shadow-xl mb-6">
+                                {!! QrCode::size(200)->generate($order->tickets->first()->ticket_code) !!}
+                            </div>
 
-                        <div class="text-center">
-                            <p class="text-[10px] uppercase font-black text-gray-400 tracking-widest mb-1">Kode Unik Tiket</p>
-                            <p class="text-xl font-black text-indigo-600 tracking-[0.2em]">{{ $order->tickets->first()->ticket_code }}</p>
-                        </div>
+                            <div class="text-center">
+                                <p class="text-[10px] uppercase font-black text-gray-400 tracking-widest mb-1">Kode Unik Tiket</p>
+                                <p class="text-xl font-black text-indigo-600 tracking-[0.2em]">{{ $order->tickets->first()->ticket_code }}</p>
+                            </div>
+                        @else
+                            <div class="text-center p-10">
+                                <div class="w-16 h-16 bg-amber-100 text-amber-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                                </div>
+                                <h3 class="text-lg font-black text-gray-900">Tiket Belum Siap</h3>
+                                <p class="text-xs text-gray-500 mt-2">Data tiket sedang diproses oleh sistem. Silakan refresh halaman ini dalam beberapa saat.</p>
+                            </div>
+                        @endif
                     </div>
 
                     <div class="mt-10 pt-8 border-t border-gray-50 flex justify-between items-center">
@@ -70,7 +80,9 @@
                         </div>
                         <div class="text-right">
                             <p class="text-[10px] uppercase font-black text-gray-400 tracking-widest mb-1">Jenis Tiket</p>
-                            <p class="text-sm font-bold text-gray-900 uppercase">{{ $order->tickets->first()->ticketType->name }}</p>
+                            <p class="text-sm font-bold text-gray-900 uppercase">
+                                {{ $order->tickets->count() > 0 ? $order->tickets->first()->ticketType->name : 'N/A' }}
+                            </p>
                         </div>
                     </div>
                 </div>

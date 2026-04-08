@@ -1,0 +1,20 @@
+{
+    "The :attribute field is required.": ":attribute wajib diisi.",
+    "The :attribute field must be lowercase.": ":attribute harus menggunakan huruf kecil.",
+    "The :attribute field must be a valid email address.": "Format :attribute tidak valid.",
+    "The :attribute field must be at least :min characters.": ":attribute minimal harus :min karakter.",
+    "The :attribute has already been taken.": ":attribute sudah terdaftar.",
+    "The provided password is incorrect.": "Kata sandi yang Anda masukkan salah.",
+    "These credentials do not match our records.": "Email atau kata sandi tidak cocok dengan data kami.",
+    "The :attribute field confirmation does not match.": "Konfirmasi :attribute tidak cocok.",
+    "The :attribute must be an image.": ":attribute harus berupa gambar.",
+    "The :attribute field must be a file of type: :values.": ":attribute harus berupa file bertipe: :values.",
+    "The :attribute field must not be greater than :max kilobytes.": "Ukuran :attribute tidak boleh lebih dari :max KB.",
+    "Log Out": "Keluar",
+    "Log In": "Masuk",
+    "Register": "Daftar",
+    "Email": "Email",
+    "Password": "Kata Sandi",
+    "Name": "Nama",
+    "Confirm Password": "Konfirmasi Kata Sandi"
+}

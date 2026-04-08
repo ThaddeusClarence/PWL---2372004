@@ -58,7 +58,9 @@ class AdminController extends Controller
 
         $ticket->update(['is_used' => true]);
 
-        return back()->with('success', 'VALID! Tiket berhasil diverifikasi.');
+        return back()->with('success', 'VALID! Tiket berhasil diverifikasi.')
+                    ->with('owner_name', $ticket->user->name)
+                    ->with('ticket_type', $ticket->ticketType->name);
     }
 
     /**
@@ -198,5 +200,17 @@ class AdminController extends Controller
     {
         \App\Models\WaitingList::findOrFail($id)->delete();
         return back()->with('success', 'Data antrean berhasil dihapus!');
+    }
+
+    public function ticketsIndex()
+    {
+        $tickets = \App\Models\Ticket::with(['user', 'ticketType.event'])->latest()->paginate(20);
+        return view('admin.tickets.index', compact('tickets'));
+    }
+
+    public function ticketDestroy($id)
+    {
+        \App\Models\Ticket::findOrFail($id)->delete();
+        return back()->with('success', 'Tiket berhasil "disobek" (dihapus dari sistem).');
     }
 }

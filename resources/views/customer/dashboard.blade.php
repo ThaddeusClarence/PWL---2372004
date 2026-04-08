@@ -137,11 +137,9 @@
             </div>
             @endif
             
-            {{-- Riwayat Transaksi Section (Simulasi Status) --}}
             <div class="mt-20 space-y-8">
                 <div class="flex items-center justify-between">
                     <h2 class="text-2xl font-black text-gray-900 leading-tight">Riwayat Transaksi</h2>
-                    <span class="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] italic underline">Simulasi Status Transaksi</span>
                 </div>
 
                 <div class="bg-white rounded-[40px] border border-gray-100 shadow-[0_40px_100px_-30px_rgba(0,0,0,0.1)] overflow-hidden">
@@ -159,10 +157,20 @@
                                 @forelse($orders as $order)
                                 <tr class="hover:bg-gray-50/30 transition group">
                                     <td class="px-10 py-8">
-                                        <p class="text-sm font-black text-gray-900 group-hover:text-indigo-600 transition">{{ $order->event->title }}</p>
-                                        <p class="text-[10px] font-bold text-gray-400 mt-1 uppercase tracking-tighter">ORDER #{{ $order->id }} • {{ $order->created_at->format('d M Y') }}</p>
+                                        <div class="flex flex-col">
+                                            <p class="text-sm font-black text-gray-900 group-hover:text-indigo-600 transition">{{ $order->event->title }}</p>
+                                            <p class="text-[10px] font-bold text-gray-400 mt-1 uppercase tracking-tighter">ORDER #{{ $order->id }} • {{ $order->created_at->format('d M Y') }}</p>
+                                            
+                                            {{-- Status Penggunaan Tiket --}}
+                                            @if($order->status == 'paid' && $order->tickets->where('is_used', true)->isNotEmpty())
+                                                <span class="mt-2 text-[9px] font-black text-red-500 uppercase tracking-widest flex items-center gap-1">
+                                                    <div class="w-1.5 h-1.5 rounded-full bg-red-500"></div>
+                                                    Tiket Sudah Digunakan
+                                                </span>
+                                            @endif
+                                        </div>
                                     </td>
-                                    <td class="px-10 py-8 tabular-nums font-bold text-gray-700 text-sm">
+                                    <td class="px-10 py-8 tabular-nums font-bold text-gray-700 text-sm md:table-cell hidden">
                                         Rp {{ number_format($order->total_price, 0, ',', '.') }}
                                     </td>
                                     <td class="px-10 py-8">
@@ -175,17 +183,26 @@
                                         @endif
                                     </td>
                                     <td class="px-10 py-8 text-right">
-                                        @if($order->status == 'pending')
-                                            <a href="{{ route('checkout.payment', $order->id) }}" class="inline-block px-6 py-3 bg-indigo-600 text-white rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-black transition-all shadow-xl shadow-indigo-100 active:scale-95">
-                                                Lanjutkan Bayar
-                                            </a>
-                                        @elseif($order->status == 'paid')
-                                            <a href="{{ route('customer.ticket.show', $order->id) }}" class="inline-block px-6 py-3 bg-emerald-600 text-white rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-black transition-all shadow-xl shadow-emerald-100 active:scale-95">
-                                                LIHAT E-TIKET 🎟️
-                                            </a>
-                                        @else
-                                            <span class="text-[10px] font-bold text-gray-300 italic">Transaksi Expired</span>
-                                        @endif
+                                        <div class="flex items-center justify-end gap-3">
+                                            @if($order->status == 'pending')
+                                                <a href="{{ route('checkout.payment', $order->id) }}" class="inline-block px-6 py-3 bg-indigo-600 text-white rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-black transition-all shadow-xl shadow-indigo-100 active:scale-95">
+                                                    Bayar
+                                                </a>
+                                            @elseif($order->status == 'paid')
+                                                <a href="{{ route('customer.ticket.show', $order->id) }}" class="inline-block px-6 py-3 bg-emerald-600 text-white rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-black transition-all shadow-xl shadow-emerald-100 active:scale-95">
+                                                    LIHAT TIKET
+                                                </a>
+                                            @endif
+
+                                            {{-- Tombol Hapus Universal --}}
+                                            <form action="{{ route('customer.orders.destroy', $order->id) }}" method="POST" onsubmit="return confirm('Hapus riwayat transaksi ini? Jika tiket belum digunakan, data tiket juga akan hilang.')" class="inline">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="p-3 bg-gray-50 text-gray-400 hover:bg-red-500 hover:text-white rounded-xl transition-all shadow-sm" title="Hapus Riwayat">
+                                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                                                </button>
+                                            </form>
+                                        </div>
                                     </td>
                                 </tr>
                                 @empty
@@ -199,22 +216,6 @@
                 </div>
             </div>
 
-            {{-- Promo Section --}}
-            <div class="mt-20 grid grid-cols-1 md:grid-cols-3 gap-8">
-                <div class="md:col-span-2 bg-gray-900 p-10 rounded-[40px] text-white flex flex-col justify-center">
-                    <h3 class="text-2xl font-black mb-2">Diskon Khusus Customer Baru!</h3>
-                    <p class="text-gray-400 text-sm mb-6">Dapatkan potongan 20% untuk transaksi pertamamu.</p>
-                    <div class="flex items-center gap-3">
-                        <span class="px-4 py-2 bg-white/10 rounded-xl font-bold text-xs">KODE: FIRSTIKET</span>
-                        <button class="text-xs font-bold text-indigo-400 hover:text-indigo-300">Salin Kode</button>
-                    </div>
-                </div>
-                <div class="bg-indigo-600 p-10 rounded-[40px] text-white text-center">
-                    <p class="text-4xl font-black mb-2">1.250</p>
-                    <p class="text-xs font-bold uppercase tracking-widest opacity-70">Poin Reward</p>
-                    <button class="mt-6 w-full py-3 bg-white/20 rounded-2xl text-xs font-bold">Tukar Poin</button>
-                </div>
-            </div>
         </div>
     </div>
 </x-app-layout>

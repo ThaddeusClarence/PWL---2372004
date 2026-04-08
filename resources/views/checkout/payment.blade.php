@@ -8,7 +8,7 @@
                 {{-- Top Status Bar --}}
                 <div class="bg-amber-50 px-10 py-4 flex items-center justify-center gap-2 border-b border-amber-100">
                     <div class="w-2 h-2 rounded-full bg-amber-500 animate-pulse"></div>
-                    <span class="text-[10px] font-black text-amber-600 uppercase tracking-widest">Menunggu Simulasi Pembayaran</span>
+                    <span class="text-[10px] font-black text-amber-600 uppercase tracking-widest">Menunggu Konfirmasi Pembayaran</span>
                 </div>
 
                 <div class="p-12 md:p-16 text-center">
@@ -18,7 +18,7 @@
                     </div>
 
                     <h2 class="text-3xl font-black text-gray-900 mb-2 leading-tight uppercase tracking-tighter">Konfirmasi Pembayaran</h2>
-                    <p class="text-gray-400 font-medium mb-12">Silakan pilih status pembayaran untuk simulasi sistem.</p>
+                    <p class="text-gray-400 font-medium mb-12">Portal Pembayaran Aman EventMaster</p>
 
                     {{-- Invoice Details Section --}}
                     <div class="bg-gray-50 rounded-[40px] p-10 mb-12 border border-gray-100 text-left relative overflow-hidden">
@@ -47,7 +47,7 @@
                         <form action="{{ route('checkout.pay-success', $order->id) }}" method="POST">
                             @csrf
                             <button type="submit" class="w-full py-6 bg-indigo-600 text-white rounded-[24px] font-black text-xs uppercase tracking-[0.2em] shadow-[0_20px_40px_-10px_rgba(79,70,229,0.4)] hover:bg-black transition-all active:scale-95 flex items-center justify-center gap-3">
-                                <span>Bayar Sekarang (Simulasi PAID)</span>
+                                <span>Bayar via Virtual Account</span>
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>
                             </button>
                         </form>
@@ -55,12 +55,10 @@
                         <form action="{{ route('checkout.pay-failed', $order->id) }}" method="POST">
                             @csrf
                             <button type="submit" class="w-full py-6 bg-white text-red-500 border-2 border-red-50 rounded-[24px] font-black text-xs uppercase tracking-[0.2em] hover:bg-red-50 transition-all active:scale-95">
-                                Batalkan (Simulasi FAILED)
+                                Batalkan Transaksi
                             </button>
                         </form>
                     </div>
-
-                    <p class="mt-12 text-[10px] font-bold text-gray-300 uppercase tracking-widest italic">Simulasi ini digunakan untuk memenuhi kriteria Capstone Project</p>
                 </div>
             </div>
             

@@ -70,6 +70,8 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/admin/orders/{order}/status', [AdminController::class, 'updateOrderStatus'])->name('admin.orders.updateStatus');
     Route::get('/admin/waiting-list', [AdminController::class, 'waitingListIndex'])->name('admin.waiting-list.index');
     Route::delete('/admin/waiting-list/{waiting_list}', [AdminController::class, 'waitingListDestroy'])->name('admin.waiting-list.destroy');
+    Route::get('/admin/tickets', [AdminController::class, 'ticketsIndex'])->name('admin.tickets.index');
+    Route::delete('/admin/tickets/{ticket}', [AdminController::class, 'ticketDestroy'])->name('admin.tickets.destroy');
     Route::delete('/admin/customers/{user}', [AdminController::class, 'customerDestroy'])->name('admin.customers.destroy');
 
     // Dashboard Organizer
@@ -78,6 +80,7 @@ Route::middleware(['auth'])->group(function () {
     // Dashboard Customer
     Route::get('/customer/dashboard', [CustomerController::class, 'index'])->name('customer.dashboard');
     Route::get('/customer/ticket/{order}', [CustomerController::class, 'showTicket'])->name('customer.ticket.show');
+    Route::delete('/customer/orders/{order}', [CustomerController::class, 'orderDestroy'])->name('customer.orders.destroy');
     Route::post('/events/{event}/waiting-list', [CustomerController::class, 'joinWaitingList'])->name('events.waiting-list');
 
     // FITUR TICKETING (Checkout & Simulasi Pembayaran)

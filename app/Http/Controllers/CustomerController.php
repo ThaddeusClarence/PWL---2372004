@@ -32,7 +32,7 @@ class CustomerController extends Controller
         // Ambil daftar event untuk dibeli (Pindah dari Front Page)
         $events = Event::latest()->get();
 
-        return view('customer.dashboard', compact('orders', 'events', 'activeTicketCount', 'usedTicketCount'));
+        return view('customer.dashboard', compact('orders', 'events', 'activeTicketCount', 'usedTicketCount', 'tickets'));
     }
 
     public function showTicket(Order $order)
@@ -68,5 +68,18 @@ class CustomerController extends Controller
         ]);
 
         return back()->with('success', 'Berhasil! Anda telah masuk ke dalam Waiting List. Kami akan hubungi Anda jika tiket tersedia kembali.');
+    }
+    public function orderDestroy(Order $order)
+    {
+        // Pastikan order milik user yang login
+        if ($order->user_id !== Auth::id()) {
+            abort(403);
+        }
+
+        // Hapus tiket terkait dulu baru hapus ordernya
+        $order->tickets()->delete();
+        $order->delete();
+
+        return back()->with('success', 'Riwayat transaksi berhasil dihapus.');
     }
 }
