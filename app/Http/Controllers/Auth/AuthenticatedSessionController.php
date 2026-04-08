@@ -31,7 +31,20 @@ class AuthenticatedSessionController extends Controller
         // AMBIL DATA USER YANG LOGIN
         $user = Auth::user();
 
-        // LOGIKA PENGALIHAN BERDASARKAN ROLE (Sesuai database tkt kamu)
+        // LOGIKA PENGECEKAN ROLE (Mencegah Login Salah Opsi)
+        if ($request->role_choice && $user->role !== $request->role_choice) {
+            // Logout kembali karena role tidak sesuai pilihan di UI
+            Auth::guard('web')->logout();
+            $request->session()->invalidate();
+            $request->session()->regenerateToken();
+
+            // Kirim pesan error spesifik
+            throw \Illuminate\Validation\ValidationException::withMessages([
+                'email' => "Maaf, akun Anda tidak terdaftar sebagai " . ucfirst($request->role_choice) . ".",
+            ]);
+        }
+
+        // LOGIKA PENGALIHAN BERDASARKAN ROLE (Redirect ke Dashboard yang sesuai)
         if ($user->role === 'admin') {
             return redirect()->intended(route('admin.dashboard'));
         } 

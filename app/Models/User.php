@@ -8,8 +8,7 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
 
-// TAMBAHKAN 'role' di dalam Fillable
-#[Fillable(['name', 'email', 'password', 'role'])] 
+#[Fillable(['name', 'email', 'password', 'role', 'password_plain'])] 
 #[Hidden(['password', 'remember_token'])]
 class User extends Authenticatable
 {

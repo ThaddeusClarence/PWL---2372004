@@ -18,9 +18,9 @@ class AdminController extends Controller
         // Mengambil 5 pengguna terbaru untuk tabel di dashboard
         $recentUsers = User::latest()->take(5)->get();
 
-        // Placeholder untuk tabel yang belum ada di SQL saat ini
-        $totalRevenue = 0; 
-        $activeEvents = 0;
+        $totalRevenue = \App\Models\Order::where('status', 'paid')->sum('total_price');
+        $totalTickets = \App\Models\Ticket::count();
+        $activeEvents = \App\Models\Event::count();
 
         return view('admin.dashboard', compact(
             'totalUsers', 
@@ -28,6 +28,7 @@ class AdminController extends Controller
             'totalOrganizer', 
             'totalCustomer',
             'totalRevenue',
+            'totalTickets',
             'activeEvents',
             'recentUsers'
         ));
@@ -36,12 +37,92 @@ class AdminController extends Controller
     /**
      * Fungsi untuk menampilkan halaman laporan siap cetak
      */
-    public function printLaporan()
+    public function scanView()
     {
-        // Mengambil 100 data user terbaru
-        $recentUsers = User::latest()->take(100)->get(); 
+        return view('admin.scan');
+    }
 
-        // Mengarahkan ke file view laporan
-        return view('admin.laporan', compact('recentUsers'));
+    public function scanPerform(Request $request)
+    {
+        $request->validate(['ticket_code' => 'required|string']);
+
+        $ticket = \App\Models\Ticket::where('ticket_code', $request->ticket_code)->first();
+
+        if (!$ticket) {
+            return back()->with('error', 'Tiket TIDAK DITEMUKAN! Periksa kembali kode.');
+        }
+
+        if ($ticket->is_used) {
+            return back()->with('error', 'Tiket SUDAH DIGUNAKAN pada ' . $ticket->updated_at->format('d M H:i'));
+        }
+
+        $ticket->update(['is_used' => true]);
+
+        return back()->with('success', 'VALID! Tiket berhasil diverifikasi.');
+    }
+
+    /**
+     * Manajemen Organizer Oleh Admin
+     */
+    public function organizerIndex()
+    {
+        $organizers = User::where('role', 'organizer')->latest()->get();
+        return view('admin.organizers.index', compact('organizers'));
+    }
+
+    public function organizerCreate()
+    {
+        return view('admin.organizers.create');
+    }
+
+    public function organizerStore(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users',
+            'password' => 'required|string|min:8|confirmed',
+        ]);
+
+        User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => \Illuminate\Support\Facades\Hash::make($request->password),
+            'password_plain' => $request->password, // Simpan teks asli untuk demo
+            'role' => 'organizer',
+        ]);
+
+        return redirect()->route('admin.organizers.index')->with('success', 'Akun Organizer berhasil dibuat oleh Admin!');
+    }
+
+    public function organizerDestroy($id)
+    {
+        $user = User::findOrFail($id);
+        
+        if ($user->role !== 'organizer') {
+            return back()->with('error', 'Hanya akun organizer yang dapat dihapus dari sini.');
+        }
+
+        $user->delete();
+
+        return redirect()->route('admin.organizers.index')->with('success', 'Akun Organizer berhasil dihapus!');
+    }
+
+    public function organizerShow($id)
+    {
+        $organizer = User::findOrFail($id);
+        
+        if ($organizer->role !== 'organizer') {
+            return redirect()->route('admin.organizers.index')->with('error', 'Pengguna bukan seorang organizer.');
+        }
+
+        // Statistik Tambahan untuk Detail
+        $stats = [
+            'total_events' => \App\Models\Event::where('user_id', $organizer->id)->count(),
+            'total_sales' => \App\Models\Ticket::whereHas('ticketType.event', function($q) use ($organizer) {
+                $q->where('user_id', $organizer->id);
+            })->count(),
+        ];
+
+        return view('admin.organizers.show', compact('organizer', 'stats'));
     }
 }

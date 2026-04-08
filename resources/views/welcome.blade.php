@@ -3,105 +3,205 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EventMaster - Transformasi Manajemen Event</title>
+    <title>EventMaster - Solusi Manajemen Event Premium</title>
+    <!-- CSS & Fonts -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Plus Jakarta Sans', sans-serif; scroll-behavior: smooth; }
-        .glass-nav { background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(12px); border-bottom: 1px solid rgba(229, 231, 235, 0.5); }
-        .hero-gradient { background: radial-gradient(circle at top right, #4f46e5, #312e81, #0f172a); }
-        .text-gradient { background: linear-gradient(to right, #818cf8, #c084fc, #fb7185); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        * { font-family: 'Plus Jakarta Sans', sans-serif; scroll-behavior: smooth; }
+        .text-prime { color: #1a1c21; }
+        .bg-soft { background-color: #fbfcfd; }
+        .glass-nav { background: rgba(251, 252, 253, 0.8); backdrop-filter: blur(20px); border-bottom: 1px solid rgba(229, 231, 235, 0.5); }
+        .hero-gradient { background: radial-gradient(circle at 50% 50%, #eff6ff 0%, #fbfcfd 100%); }
+        .feature-card { background: white; border: 1px solid #f0f2f5; transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
+        .feature-card:hover { transform: translateY(-8px); border-color: #4f46e5; box-shadow: 0 20px 40px -12px rgba(79, 70, 229, 0.1); }
+        .btn-premium { background: #1a1c21; color: white; transition: all 0.3s; }
+        .btn-premium:hover { background: #4f46e5; transform: scale(1.02); box-shadow: 0 10px 20px -5px rgba(79, 70, 229, 0.3); }
     </style>
 </head>
-<body class="bg-[#fcfcfd] text-[#1a1c21]">
+<body class="bg-soft text-prime selection:bg-indigo-100 selection:text-indigo-900 overflow-x-hidden">
 
-    <nav class="glass-nav sticky top-0 z-[100]">
-        <div class="max-w-7xl mx-auto px-6 h-20 flex justify-between items-center">
-            <div class="flex items-center gap-2">
+    <!-- Navbar -->
+    <nav class="glass-nav sticky top-0 z-[100] px-6">
+        <div class="max-w-7xl mx-auto flex justify-between items-center h-24">
+            <div class="flex items-center gap-3">
                 <div class="w-10 h-10 bg-indigo-600 rounded-xl flex items-center justify-center shadow-lg shadow-indigo-200">
                     <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 5v2m0 4v2m0 4v2M5 5a2 2 0 012-2h10a2 2 0 012 2v14a2 2 0 01-2 2H7a2 2 0 01-2-2V5z"></path></svg>
                 </div>
-                <a href="{{ url('/') }}" class="text-xl font-extrabold tracking-tight text-gray-900">Event<span class="text-indigo-600">Master</span></a>
-            </div>
-            
-            <div class="hidden md:flex items-center space-x-10 text-sm font-semibold text-gray-600">
-                <a href="#explore" class="hover:text-indigo-600 transition-colors">Jelajah</a>
-                <a href="#" class="hover:text-indigo-600 transition-colors">Kategori</a>
-                <a href="#" class="hover:text-indigo-600 transition-colors">Organizer</a>
+                <span class="text-2xl font-black tracking-tight text-gray-900 border-none bg-none">Event<span class="text-indigo-600">Master</span></span>
             </div>
 
-            <div class="flex items-center gap-4">
-                @if (Route::has('login'))
-                    @auth
-                        {{-- NAVIGASI SAAT LOGIN --}}
-                        <div class="flex items-center gap-3">
-                            <span class="text-sm font-medium text-gray-500">Halo, {{ Auth::user()->name }}</span>
-                            <a href="{{ Auth::user()->role === 'admin' ? route('admin.dashboard') : url('/dashboard') }}" 
-                               class="text-sm font-bold text-indigo-600 py-2 px-4 bg-indigo-50 rounded-lg border border-indigo-100 hover:bg-indigo-100 transition">
-                                Dashboard
-                            </a>
+            <div class="hidden md:flex gap-12 text-sm font-bold text-gray-400">
+                <a href="#features" class="hover:text-indigo-600 transition tracking-wide uppercase text-[10px]">Layanan</a>
+                <a href="#process" class="hover:text-indigo-600 transition tracking-wide uppercase text-[10px]">Alur Kerja</a>
+                <a href="#" class="hover:text-indigo-600 transition tracking-wide uppercase text-[10px]">Hubungi Kami</a>
+            </div>
+
+            <div class="flex gap-4 items-center">
+                @auth
+                    <div class="flex items-center gap-4 bg-gray-50 border border-gray-100 p-1.5 rounded-2xl pl-5 shadow-sm">
+                        <span class="text-[10px] font-black text-gray-400 uppercase tracking-widest hidden md:inline">{{ Auth::user()->name }}</span>
+                        <div class="flex gap-1">
+                            <a href="{{ Auth::user()->role === 'admin' ? route('admin.dashboard') : (Auth::user()->role === 'organizer' ? route('organizer.dashboard') : route('customer.dashboard')) }}" class="btn-premium px-6 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest">Dashboard</a>
                             <form method="POST" action="{{ route('logout') }}" class="inline">
                                 @csrf
-                                <button type="submit" class="text-sm font-bold text-gray-400 hover:text-red-500 transition">Keluar</button>
+                                <button type="submit" class="p-2.5 bg-white text-gray-400 hover:text-red-500 rounded-xl transition-all border border-transparent hover:border-red-100 italic" title="Keluar">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
+                                </button>
                             </form>
                         </div>
-                    @else
-                        {{-- NAVIGASI SAAT LOGOUT (GUEST) --}}
-                        <a href="{{ route('login') }}" class="text-sm font-bold text-gray-700 hover:text-indigo-600 transition">Masuk</a>
-                        @if (Route::has('register'))
-                            <a href="{{ route('register') }}" class="bg-gray-900 text-white px-6 py-2.5 rounded-full text-sm font-bold hover:bg-indigo-600 transition shadow-lg active:scale-95">Daftar</a>
-                        @endif
-                    @endauth
-                @endif
+                    </div>
+                @else
+                    <a href="{{ route('login') }}" class="px-6 py-3 text-xs font-black text-gray-400 hover:text-indigo-600 transition uppercase tracking-widest">Masuk</a>
+                    <a href="{{ route('register') }}" class="btn-premium px-8 py-3 rounded-xl text-xs font-black uppercase tracking-widest">Daftar</a>
+                @endauth
             </div>
         </div>
     </nav>
 
-    <header class="hero-gradient pt-24 pb-32 px-6 relative overflow-hidden">
-        <div class="max-w-7xl mx-auto text-center relative z-10">
-            <div class="inline-flex items-center gap-2 py-2 px-4 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-indigo-200 text-xs font-bold uppercase mb-10">
-                Capstone Project 2026
-            </div>
-            <h1 class="text-5xl md:text-8xl font-[900] text-white leading-[1.1] mb-8">
-                Kelola Event Jadi <br> <span class="text-gradient">Jauh Lebih Mudah</span>
-            </h1>
-            <p class="text-indigo-100/80 text-lg md:text-xl max-w-2xl mx-auto mb-14 font-medium">
-                Satu ekosistem untuk Admin, Organizer, dan Customer. Bangun pengalaman event tak terlupakan dalam hitungan klik.
-            </p>
-            <div class="flex justify-center">
-                <a href="#explore" class="w-full sm:w-auto bg-white text-indigo-900 px-12 py-5 rounded-2xl font-extrabold text-lg hover:shadow-xl transition-all hover:-translate-y-1">
-                    Temukan Event Sekarang
-                </a>
-            </div>
-        </div>
-    </header>
+    <!-- Hero Section -->
+    <section class="hero-gradient pt-32 pb-40 px-6 relative overflow-hidden">
+        {{-- Elegant Decorative Elements --}}
+        <div class="absolute top-0 right-0 w-[500px] h-[500px] bg-indigo-50 rounded-full blur-[120px] -translate-y-1/2 translate-x-1/3 opacity-50"></div>
+        <div class="absolute bottom-0 left-0 w-[500px] h-[500px] bg-blue-50 rounded-full blur-[120px] translate-y-1/2 -translate-x-1/3 opacity-50"></div>
 
-    <section id="explore" class="py-32 max-w-7xl mx-auto px-6 text-center md:text-left">
-        <div class="flex flex-col md:flex-row justify-between items-end mb-20 gap-6">
-            <h2 class="text-4xl md:text-5xl font-extrabold text-gray-900">Satu Platform,<br>Ekosistem Lengkap.</h2>
-            <p class="text-gray-500 text-lg max-w-sm font-medium">Didesain khusus untuk memastikan keamanan dan kenyamanan transaksi Anda.</p>
-        </div>
-        <div class="grid md:grid-cols-3 gap-8">
-            <div class="bg-white p-10 rounded-[40px] border border-gray-100 shadow-sm hover:border-indigo-100 transition">
-                <h3 class="text-2xl font-bold mb-4 text-indigo-600">Admin Hub</h3>
-                <p class="text-gray-500 font-medium">Kontrol penuh verifikasi organizer dan pantau aliran dana secara transparan.</p>
-            </div>
-            <div class="bg-white p-10 rounded-[40px] border border-gray-100 shadow-sm hover:border-emerald-100 transition">
-                <h3 class="text-2xl font-bold mb-4 text-emerald-600">Powerful Tools</h3>
-                <p class="text-gray-500 font-medium">Akses analitik penjualan tiket dan manajemen kuota real-time.</p>
-            </div>
-            <div class="bg-white p-10 rounded-[40px] border border-gray-100 shadow-sm hover:border-orange-100 transition">
-                <h3 class="text-2xl font-bold mb-4 text-orange-600">Seamless Booking</h3>
-                <p class="text-gray-500 font-medium">Proses checkout instan untuk tiket VIP maupun Reguler.</p>
+        <div class="max-w-4xl mx-auto text-center relative z-10 space-y-10">
+            <span class="inline-block py-2 px-6 rounded-full bg-indigo-50 border border-indigo-100 text-indigo-500 text-[10px] font-black uppercase tracking-[0.2em]">
+                Premium Management 2026
+            </span>
+            <h1 class="text-6xl md:text-8xl font-black text-gray-900 leading-[1.05] tracking-tight">
+                Standar Baru <br> <span class="italic font-serif text-indigo-600">Ekosistem</span> Event.
+            </h1>
+            <p class="text-gray-500 text-lg md:text-xl font-medium max-w-2xl mx-auto leading-relaxed">
+                Platform terintegrasi yang dirancang untuk menghadirkan pengalaman manajemen event yang mulus, aman, dan berkelas dunia bagi anda.
+            </p>
+            <div class="flex justify-center gap-6 pt-6">
+                @auth
+                    <a href="{{ Auth::user()->role === 'admin' ? route('admin.dashboard') : (Auth::user()->role === 'organizer' ? route('organizer.dashboard') : route('customer.dashboard')) }}" class="btn-premium px-12 py-5 rounded-2xl font-black text-sm uppercase tracking-widest">Buka Dashboard</a>
+                @else
+                    <a href="{{ route('register') }}" class="btn-premium px-12 py-5 rounded-2xl font-black text-sm uppercase tracking-widest">Daftar Akun Baru</a>
+                @endauth
+                <a href="#features" class="px-12 py-5 bg-white border border-gray-100 rounded-2xl font-black text-sm text-gray-400 hover:border-indigo-600 hover:text-indigo-600 transition-all uppercase tracking-widest">Eksplorasi</a>
             </div>
         </div>
     </section>
 
-    <footer class="bg-gray-50 py-20 border-t border-gray-200">
-        <div class="max-w-7xl mx-auto px-6 text-center">
-            <span class="text-2xl font-black">EVENT<span class="text-indigo-600">MASTER</span></span>
-            <p class="text-gray-400 text-sm mt-4">&copy; 2026 Thaddeus Clarence. Capstone Project 2372004.</p>
+    <!-- Logo Cloud / Social Proof -->
+    <section class="py-16 border-y border-gray-100 bg-white">
+        <div class="max-w-7xl mx-auto px-6">
+            <p class="text-center text-[10px] font-black text-gray-300 uppercase tracking-[0.3em] mb-10">Dipercaya Oleh Berbagai Institusi</p>
+            <div class="flex flex-wrap justify-center gap-16 md:gap-24 opacity-30 grayscale items-center text-3xl font-serif font-bold text-gray-900 pointer-events-none">
+                <span>UNIVERSITY</span>
+                <span>EVENT.CO</span>
+                <span>GLOBAL TECH</span>
+                <span>DIGITAL.ID</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section id="features" class="py-32 px-6">
+        <div class="max-w-7xl mx-auto">
+            <div class="flex flex-col md:flex-row justify-between items-end mb-24 gap-8">
+                <div class="max-w-xl">
+                    <span class="text-indigo-600 font-black tracking-[0.2em] text-[10px] uppercase mb-4 block">Layanan Kami</span>
+                    <h2 class="text-4xl md:text-5xl font-black text-gray-900 leading-tight">Memberikan yang Terbaik Untuk Event Anda.</h2>
+                </div>
+                <p class="text-gray-400 font-medium max-w-sm mb-2 text-sm leading-relaxed">Kami menggabungkan teknologi modern dengan kemudahan penggunaan untuk hasil yang maksimal.</p>
+            </div>
+            
+            <div class="grid md:grid-cols-3 gap-10">
+                <div class="feature-card p-12 rounded-[40px]">
+                    <h3 class="text-xl font-black mb-4">Aksesibilitas</h3>
+                    <p class="text-sm text-gray-500 font-medium leading-relaxed">System berbasis cloud yang dapat diakses dari mana saja, kapan saja, memberikan anda kendali penuh.</p>
+                </div>
+                <div class="feature-card p-12 rounded-[40px] border-indigo-100">
+                    <h3 class="text-xl font-black mb-4 text-indigo-600">Keamanan</h3>
+                    <p class="text-sm text-gray-500 font-medium leading-relaxed">Setiap tiket dilengkapi dengan enkripsi unik untuk mencegah duplikasi dan memastikan keaslian.</p>
+                </div>
+                <div class="feature-card p-12 rounded-[40px]">
+                    <h3 class="text-xl font-black mb-4">Efisiensi</h3>
+                    <p class="text-sm text-gray-500 font-medium leading-relaxed">Proses pendaftaran hingga verifikasi di lokasi dilakukan secara otomatis untuk menghemat waktu anda.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Integration Section -->
+    <section id="process" class="py-32 px-6 bg-white border-t border-gray-100">
+        <div class="max-w-7xl mx-auto grid lg:grid-cols-2 gap-20 items-center">
+            <div class="space-y-10">
+                <h2 class="text-4xl md:text-5xl font-black text-gray-900 tracking-tight leading-tight">Proses Modern Untuk <br>Hasil yang <span class="text-indigo-600">Efisien.</span></h2>
+                <div class="space-y-8">
+                    <div class="flex gap-6">
+                        <div class="w-12 h-12 rounded-full border-2 border-indigo-600 text-indigo-600 flex items-center justify-center font-black shrink-0">1</div>
+                        <div>
+                            <h4 class="font-bold text-gray-900 mb-1">Inisialisasi Data</h4>
+                            <p class="text-sm text-gray-400 font-medium">Buat event anda dengan detail lengkap hanya dalam beberapa menit.</p>
+                        </div>
+                    </div>
+                    <div class="flex gap-6">
+                        <div class="w-12 h-12 rounded-full border-2 border-gray-100 text-gray-300 flex items-center justify-center font-black shrink-0">2</div>
+                        <div>
+                            <h4 class="font-bold text-gray-400 mb-1">Manajemen Penjualan</h4>
+                            <p class="text-sm text-gray-300 font-medium italic italic">Pantau setiap tiket yang terjual secara real-time melalui dashboard.</p>
+                        </div>
+                    </div>
+                    <div class="flex gap-6">
+                        <div class="w-12 h-12 rounded-full border-2 border-gray-100 text-gray-300 flex items-center justify-center font-black shrink-0">3</div>
+                        <div>
+                            <h4 class="font-bold text-gray-400 mb-1">Verifikasi Peserta</h4>
+                            <p class="text-sm text-gray-300 font-medium">Scan QR peserta di lokasi dengan aplikasi pemindai kami yang cepat.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-indigo-50 p-16 rounded-[60px] border border-indigo-100">
+                 <div class="bg-white p-10 rounded-[40px] shadow-2xl shadow-indigo-100 space-y-6">
+                     <div class="flex gap-2">
+                         <div class="w-3 h-3 rounded-full bg-red-400"></div>
+                         <div class="w-3 h-3 rounded-full bg-amber-400"></div>
+                         <div class="w-3 h-3 rounded-full bg-emerald-400"></div>
+                     </div>
+                     <div class="space-y-4 pt-4">
+                         <div class="h-4 w-3/4 bg-gray-50 rounded-full"></div>
+                         <div class="h-4 w-full bg-gray-50 rounded-full"></div>
+                         <div class="h-4 w-1/2 bg-gray-50 rounded-full"></div>
+                     </div>
+                     <div class="pt-8 border-t border-gray-50 flex justify-between items-center">
+                         <div class="w-24 h-10 bg-indigo-600 rounded-xl"></div>
+                         <div class="w-12 h-12 bg-gray-50 rounded-full"></div>
+                     </div>
+                 </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Final CTA -->
+    <section class="py-32 px-6">
+        <div class="max-w-4xl mx-auto rounded-[60px] bg-gray-900 p-16 text-center space-y-10 border border-white/10 shadow-2xl">
+            <h2 class="text-4xl md:text-5xl font-black text-white px-2 leading-tight">Siap Untuk Meningkatkan <br>Pengalaman Event Anda?</h2>
+            <p class="text-gray-400 font-medium text-lg max-w-xl mx-auto leading-relaxed">Bergabunglah dengan ratusan penyelenggara event yang telah mempercayakan sistem mereka kepada kami.</p>
+            <div class="pt-4 flex justify-center gap-6">
+                <a href="{{ route('register') }}" class="bg-white text-gray-900 px-12 py-5 rounded-2xl font-black text-sm uppercase tracking-widest hover:bg-indigo-600 hover:text-white transition-all">Daftar Akun Gratis</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="py-20 px-6 bg-white border-t border-gray-50">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-10">
+            <div class="flex items-center gap-3">
+                <span class="text-2xl font-black tracking-tight text-gray-900">Event<span class="text-indigo-600">Master</span></span>
+            </div>
+            <p class="text-gray-300 text-[10px] font-black uppercase tracking-[0.3em]">&copy; 2026 Thaddeus Clarence. All Rights Reserved.</p>
+            <div class="flex gap-12 text-[10px] font-black text-gray-400 uppercase tracking-widest">
+                <a href="#" class="hover:text-indigo-600 transition">Kebijakan</a>
+                <a href="#" class="hover:text-indigo-600 transition">Ketentuan</a>
+                <a href="#" class="hover:text-indigo-600 transition">Privasi</a>
+            </div>
         </div>
     </footer>
+
 </body>
 </html>
