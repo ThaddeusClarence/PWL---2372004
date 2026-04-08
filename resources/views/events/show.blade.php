@@ -39,6 +39,21 @@
     </div>
 
     <main class="max-w-7xl mx-auto px-6 -mt-32 relative z-10 pb-24">
+        
+        {{-- Message Alerts --}}
+        @if(session('success'))
+            <div class="mb-4 p-4 bg-emerald-50 border border-emerald-100 text-emerald-600 rounded-2xl font-bold flex items-center gap-3">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>
+                {{ session('success') }}
+            </div>
+        @endif
+        @if(session('error'))
+            <div class="mb-4 p-4 bg-red-50 border border-red-100 text-red-600 rounded-2xl font-bold flex items-center gap-3">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                {{ session('error') }}
+            </div>
+        @endif
+
         <div class="grid lg:grid-cols-3 gap-10">
             {{-- Bagian Detail Event --}}
             <div class="lg:col-span-2">
@@ -114,7 +129,7 @@
                             </div>
 
                             @auth
-                                <button type="submit" class="w-full bg-indigo-600 hover:bg-white hover:text-indigo-600 text-white py-5 rounded-2xl font-black text-lg transition-all shadow-lg active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed" {{ $event->ticketTypes->isEmpty() ? 'disabled' : '' }}>
+                                <button type="submit" class="w-full bg-indigo-600 hover:bg-white hover:text-indigo-600 text-white py-5 rounded-2xl font-black text-lg transition-all shadow-lg active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed" {{ $event->ticketTypes->where('remaining_quota', '>', 0)->isEmpty() ? 'disabled' : '' }}>
                                     Beli Tiket Sekarang
                                 </button>
                             @else
@@ -125,7 +140,7 @@
                         </form>
 
                         <div class="mt-6 flex items-center gap-3 text-xs font-bold text-gray-400 justify-center">
-                            <svg class="w-4 h-4 text-emerald-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M2.166 4.9L10 1.554 17.834 4.9c.42.18.736.56.884 1.01.148.45.158.913.028 1.363l-1.352 4.673c-.234.808-.574 1.57-1.013 2.277a11.14 11.14 0 01-1.636 2.052 11.233 11.233 0 01-2.052 1.636 10.974 10.974 0 01-2.277 1.013L10 19.34a.75.75 0 01-.5 0L8.604 18.92a10.978 10.978 0 01-2.277-1.013 11.23 11.23 0 01-3.688-3.688 11.14 11.14 0 01-1.013-2.277l-1.352-4.673a2.25 2.25 0 01.912-2.373zM10 3.013L3.896 5.617a.75.75 0 00-.31.791l1.352 4.673c.189.65.467 1.272.825 1.848.336.541.745 1.04 1.218 1.488a9.73 9.73 0 001.623 1.295 9.475 9.475 0 001.396.677 9.475 9.475 0 001.396-.677 9.73 9.73 0 001.623-1.295 9.728 9.728 0 001.218-1.488 9.64 9.64 0 00.825-1.848l1.352-4.673a.75.75 0 00-.31-.791L10 3.013zM10 7a.75.75 0 01.75.75v3.5a.75.75 0 01-1.5 0v-3.5A.75.75 0 0110 7zm0 6.5a.875.875 0 100-1.75.875.875 0 000 1.75z" clip-rule="evenodd" /></svg>
+                            <svg class="w-4 h-4 text-emerald-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M2.166 4.9L10 1.554 17.834 4.9c.42.18.736.56.884 1.01.148.45.158.913.028 1.363l-1.352 4.673c-.234.808-.574 1.57-1.013 2.277a11.14 11.14 0 01-1.636 2.052 11.233 11.233 0 01-2.052 1.636 10.974 10.974 0 01-2.277 1.013L10 19.34a.75.75 0 01-.5 0L8.604 18.92a10.978 10.978 0 01-2.277-1.013 11.233 11.233 0 01-2.052 1.636 10.974 10.974 0 01-2.277 1.013Z" clip-rule="evenodd" /></svg>
                             Jaminan Pembayaran Aman
                         </div>
                     </div>

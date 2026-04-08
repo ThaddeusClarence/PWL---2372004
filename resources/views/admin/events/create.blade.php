@@ -69,6 +69,19 @@
                             <input type="time" name="start_time" required 
                                    class="w-full px-6 py-4 bg-gray-50 border-none rounded-2xl text-sm focus:ring-4 focus:ring-indigo-50 transition outline-none font-bold text-gray-700">
                         </div>
+                        <div class="md:col-span-2 bg-indigo-50/50 p-6 rounded-3xl border border-indigo-100/50">
+                            <label class="block text-xs font-black text-indigo-600 uppercase tracking-widest mb-3 flex items-center gap-2">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
+                                Tugaskan Organizer (Opsional)
+                            </label>
+                            <select name="organizer_id" class="w-full px-6 py-4 bg-white border border-indigo-100 rounded-2xl text-sm focus:ring-4 focus:ring-indigo-50 transition outline-none font-bold text-gray-700">
+                                <option value="">-- Tetapkan Organizer untuk Monitoring --</option>
+                                @foreach($organizers as $organizer)
+                                    <option value="{{ $organizer->id }}">{{ $organizer->name }} ({{ $organizer->email }})</option>
+                                @endforeach
+                            </select>
+                            <p class="text-[10px] text-indigo-400 font-bold mt-3 italic">* Organizer yang dipilih dapat memantau penjualan & analitik melalui dashboard mereka.</p>
+                        </div>
                     </div>
 
                     {{-- Ticket Types (Dynamic) --}}

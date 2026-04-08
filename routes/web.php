@@ -64,14 +64,28 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/admin/organizers/{user}', [AdminController::class, 'organizerShow'])->name('admin.organizers.show');
     Route::delete('/admin/organizers/{user}', [AdminController::class, 'organizerDestroy'])->name('admin.organizers.destroy');
 
+    // Manajemen Customer
+    Route::get('/admin/customers', [AdminController::class, 'customerIndex'])->name('admin.customers.index');
+    Route::get('/admin/customers/{user}', [AdminController::class, 'customerShow'])->name('admin.customers.show');
+    Route::post('/admin/customers/{user}/password', [AdminController::class, 'customerUpdatePassword'])->name('admin.customers.password.update');
+    Route::post('/admin/orders/{order}/status', [AdminController::class, 'updateOrderStatus'])->name('admin.orders.updateStatus');
+    Route::get('/admin/waiting-list', [AdminController::class, 'waitingListIndex'])->name('admin.waiting-list.index');
+    Route::delete('/admin/waiting-list/{waiting_list}', [AdminController::class, 'waitingListDestroy'])->name('admin.waiting-list.destroy');
+    Route::delete('/admin/customers/{user}', [AdminController::class, 'customerDestroy'])->name('admin.customers.destroy');
+
     // Dashboard Organizer
     Route::get('/organizer/dashboard', [OrganizerController::class, 'index'])->name('organizer.dashboard');
 
     // Dashboard Customer
     Route::get('/customer/dashboard', [CustomerController::class, 'index'])->name('customer.dashboard');
+    Route::get('/customer/ticket/{order}', [CustomerController::class, 'showTicket'])->name('customer.ticket.show');
+    Route::post('/events/{event}/waiting-list', [CustomerController::class, 'joinWaitingList'])->name('events.waiting-list');
 
-    // FITUR TICKETING (Checkout)
+    // FITUR TICKETING (Checkout & Simulasi Pembayaran)
     Route::post('/checkout', [\App\Http\Controllers\CheckoutController::class, 'store'])->name('checkout.store');
+    Route::get('/checkout/payment/{order}', [\App\Http\Controllers\CheckoutController::class, 'payment'])->name('checkout.payment');
+    Route::post('/checkout/pay-success/{order}', [\App\Http\Controllers\CheckoutController::class, 'paySuccess'])->name('checkout.pay-success');
+    Route::post('/checkout/pay-failed/{order}', [\App\Http\Controllers\CheckoutController::class, 'payFailed'])->name('checkout.pay-failed');
     Route::get('/checkout/success/{order}', [\App\Http\Controllers\CheckoutController::class, 'success'])->name('checkout.success');
 
     // FITUR EXPORT PDF

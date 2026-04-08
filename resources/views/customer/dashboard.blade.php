@@ -5,17 +5,18 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
         
-        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #f8fafc; }
-        .dashboard-header { background: white; border-bottom: 1px solid #e2e8f0; }
-        .card-shadow { box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06); }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #F1F5F9; } /* Latar belakang lebih kontras */
+        .dashboard-header { background: white; border-bottom: 2px solid #F1F5F9; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); }
+        .card-shadow { box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.02); }
         .btn-primary { background-color: #4f46e5; transition: all 0.2s; }
-        .btn-primary:hover { background-color: #4338ca; transform: translateY(-1px); }
+        .btn-primary:hover { background-color: #4338ca; transform: translateY(-1px); box-shadow: 0 10px 15px -3px rgba(79, 70, 229, 0.4); }
     </style>
 
     <div class="min-h-screen pb-20">
         {{-- Header Section --}}
-        <div class="bg-white border-b border-gray-200 py-8 px-4 mb-8">
-            <div class="max-w-5xl mx-auto flex flex-col md:flex-row md:items-center justify-between gap-4">
+        {{-- Modern Floating Header --}}
+        <div class="max-w-7xl mx-auto px-4 mt-8">
+            <div class="bg-white border border-gray-100 py-8 px-10 rounded-[32px] shadow-[0_30px_100px_-20px_rgba(0,0,0,0.15)] flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div>
                     <h1 class="text-2xl font-extrabold text-gray-900">Halo, {{ Auth::user()->name }} 👋</h1>
                     <p class="text-sm text-gray-500 mt-1">Selamat datang di pusat manajemen event Anda.</p>
@@ -29,7 +30,7 @@
             </div>
         </div>
 
-        <div class="max-w-5xl mx-auto px-4">
+        <div class="max-w-7xl mx-auto px-4 mt-12">
             {{-- Available Events for Purchase --}}
             <div class="mb-20">
                 <div class="flex justify-between items-end mb-10">
@@ -41,7 +42,7 @@
 
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
                     @forelse($events as $event)
-                    <div class="group bg-white rounded-[32px] border border-gray-100 shadow-sm overflow-hidden hover:shadow-2xl hover:shadow-indigo-100/50 transition-all duration-500 hover:-translate-y-2">
+                    <div class="group bg-white rounded-[40px] border border-gray-100 shadow-[0_35px_80px_-20px_rgba(0,0,0,0.08)] overflow-hidden hover:shadow-[0_50px_120px_-30px_rgba(79,70,229,0.25)] transition-all duration-500 hover:-translate-y-4">
                         <div class="relative h-56 overflow-hidden">
                             <img src="{{ $event->banner ? asset('storage/' . $event->banner) : 'https://images.unsplash.com/photo-1540575861501-7cf05a4b125a?auto=format&fit=crop&q=80&w=800' }}" 
                                  class="w-full h-full object-cover transition duration-700 group-hover:scale-110">
@@ -79,7 +80,7 @@
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
                 {{-- Tiket Card --}}
-                <div class="bg-white p-8 rounded-3xl border border-gray-100 card-shadow flex items-center justify-between">
+                <div class="bg-white p-10 rounded-[40px] border border-gray-100 shadow-xl shadow-gray-200/20 flex items-center justify-between group hover:border-indigo-200 transition">
                     <div class="flex items-center gap-5">
                         <div class="w-14 h-14 bg-indigo-50 rounded-2xl flex items-center justify-center text-indigo-600">
                             <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 5v2m0 4v2m0 4v2M5 5a2 2 0 012-2h10a2 2 0 012 2v14a2 2 0 01-2 2H7a2 2 0 01-2-2V5z"></path></svg>
@@ -93,7 +94,7 @@
                 </div>
 
                 {{-- Riwayat Card --}}
-                <div class="bg-white p-8 rounded-3xl border border-gray-100 card-shadow flex items-center justify-between">
+                <div class="bg-white p-10 rounded-[40px] border border-gray-100 shadow-xl shadow-gray-200/20 flex items-center justify-between group hover:border-indigo-200 transition">
                     <div class="flex items-center gap-5">
                         <div class="w-14 h-14 bg-emerald-50 rounded-2xl flex items-center justify-center text-emerald-600">
                             <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
@@ -111,15 +112,15 @@
             <div class="space-y-6">
                 <h2 class="text-xl font-black text-gray-900">Tiket Milik Saya</h2>
                 @foreach($tickets as $ticket)
-                <div class="bg-white rounded-3xl p-6 border border-gray-100 card-shadow flex flex-col md:flex-row items-center justify-between gap-6 transition hover:border-indigo-100">
+                <div class="bg-white rounded-[40px] p-8 border border-gray-100 shadow-xl shadow-gray-200/30 flex flex-col md:flex-row items-center justify-between gap-6 transition-all duration-300 hover:shadow-2xl hover:shadow-indigo-100/50 hover:border-indigo-100">
                     <div class="flex items-center gap-6 w-full md:w-auto">
                         <div class="w-20 h-20 bg-gray-50 rounded-2xl overflow-hidden hidden sm:block">
-                            <img src="{{ $ticket->event->banner ? asset('storage/' . $ticket->event->banner) : 'https://images.unsplash.com/photo-1540575861501-7cf05a4b125a?auto=format&fit=crop&q=80&w=200' }}" class="w-full h-full object-cover">
+                            <img src="{{ $ticket->ticketType->event->banner ? asset('storage/' . $ticket->ticketType->event->banner) : 'https://images.unsplash.com/photo-1540575861501-7cf05a4b125a?auto=format&fit=crop&q=80&w=200' }}" class="w-full h-full object-cover">
                         </div>
                         <div>
-                            <span class="text-[10px] font-black text-gray-400 uppercase tracking-widest">{{ $ticket->event->category }}</span>
-                            <h3 class="font-extrabold text-gray-900 text-lg leading-tight">{{ $ticket->event->title }}</h3>
-                            <p class="text-xs text-indigo-600 font-bold mt-1">{{ \Carbon\Carbon::parse($ticket->event->date)->format('d M Y') }} • {{ $ticket->ticketType->name }}</p>
+                            <span class="text-[10px] font-black text-gray-400 uppercase tracking-widest">{{ $ticket->ticketType->event->category }}</span>
+                            <h3 class="font-extrabold text-gray-900 text-lg leading-tight">{{ $ticket->ticketType->event->title }}</h3>
+                            <p class="text-xs text-indigo-600 font-bold mt-1">{{ \Carbon\Carbon::parse($ticket->ticketType->event->date)->format('d M Y') }} • {{ $ticket->ticketType->name }}</p>
                         </div>
                     </div>
                     <div class="flex items-center gap-4 w-full md:w-auto justify-between md:justify-end">
@@ -134,22 +135,72 @@
                 </div>
                 @endforeach
             </div>
-            @else
-            {{-- Empty State Content --}}
-            <div class="bg-white rounded-[40px] p-16 text-center border border-gray-100 card-shadow">
-                <div class="w-20 h-20 bg-gray-50 rounded-3xl flex items-center justify-center mx-auto mb-8">
-                    <svg class="w-10 h-10 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
-                </div>
-                <h2 class="text-2xl font-black text-gray-900 mb-3">Wah, Belum Ada Event Nih!</h2>
-                <p class="text-gray-400 font-medium max-w-sm mx-auto mb-10 leading-relaxed">Jangan biarkan harimu membosankan. Temukan berbagai event menarik di sekitarmu sekarang.</p>
-                <a href="{{ url('/') }}#explore" class="btn-primary px-12 py-4 text-white font-bold rounded-2xl shadow-lg shadow-indigo-100">
-                    Jelajah Event Sekarang
-                </a>
-            </div>
             @endif
             
+            {{-- Riwayat Transaksi Section (Simulasi Status) --}}
+            <div class="mt-20 space-y-8">
+                <div class="flex items-center justify-between">
+                    <h2 class="text-2xl font-black text-gray-900 leading-tight">Riwayat Transaksi</h2>
+                    <span class="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] italic underline">Simulasi Status Transaksi</span>
+                </div>
+
+                <div class="bg-white rounded-[40px] border border-gray-100 shadow-[0_40px_100px_-30px_rgba(0,0,0,0.1)] overflow-hidden">
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left">
+                            <thead>
+                                <tr class="bg-gray-50/50 text-[10px] font-black text-gray-400 uppercase tracking-widest border-b border-gray-50">
+                                    <th class="px-10 py-6">Order Information</th>
+                                    <th class="px-10 py-6">Total Price</th>
+                                    <th class="px-10 py-6">Transaction Status</th>
+                                    <th class="px-10 py-6 text-right">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-gray-50">
+                                @forelse($orders as $order)
+                                <tr class="hover:bg-gray-50/30 transition group">
+                                    <td class="px-10 py-8">
+                                        <p class="text-sm font-black text-gray-900 group-hover:text-indigo-600 transition">{{ $order->event->title }}</p>
+                                        <p class="text-[10px] font-bold text-gray-400 mt-1 uppercase tracking-tighter">ORDER #{{ $order->id }} • {{ $order->created_at->format('d M Y') }}</p>
+                                    </td>
+                                    <td class="px-10 py-8 tabular-nums font-bold text-gray-700 text-sm">
+                                        Rp {{ number_format($order->total_price, 0, ',', '.') }}
+                                    </td>
+                                    <td class="px-10 py-8">
+                                        @if($order->status == 'paid')
+                                            <span class="px-4 py-1.5 bg-emerald-50 text-emerald-600 rounded-full text-[10px] font-black uppercase tracking-widest border border-emerald-100">PAID</span>
+                                        @elseif($order->status == 'pending')
+                                            <span class="px-4 py-1.5 bg-amber-50 text-amber-600 rounded-full text-[10px] font-black uppercase tracking-widest border border-amber-100 animate-pulse">PENDING</span>
+                                        @else
+                                            <span class="px-4 py-1.5 bg-red-50 text-red-600 rounded-full text-[10px] font-black uppercase tracking-widest border border-red-100">FAILED</span>
+                                        @endif
+                                    </td>
+                                    <td class="px-10 py-8 text-right">
+                                        @if($order->status == 'pending')
+                                            <a href="{{ route('checkout.payment', $order->id) }}" class="inline-block px-6 py-3 bg-indigo-600 text-white rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-black transition-all shadow-xl shadow-indigo-100 active:scale-95">
+                                                Lanjutkan Bayar
+                                            </a>
+                                        @elseif($order->status == 'paid')
+                                            <a href="{{ route('customer.ticket.show', $order->id) }}" class="inline-block px-6 py-3 bg-emerald-600 text-white rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-black transition-all shadow-xl shadow-emerald-100 active:scale-95">
+                                                LIHAT E-TIKET 🎟️
+                                            </a>
+                                        @else
+                                            <span class="text-[10px] font-bold text-gray-300 italic">Transaksi Expired</span>
+                                        @endif
+                                    </td>
+                                </tr>
+                                @empty
+                                <tr>
+                                    <td colspan="4" class="px-10 py-20 text-center opacity-30 italic font-bold uppercase tracking-widest text-xs">Belum ada riwayat transaksi</td>
+                                </tr>
+                                @endforelse
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
             {{-- Promo Section --}}
-            <div class="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="mt-20 grid grid-cols-1 md:grid-cols-3 gap-8">
                 <div class="md:col-span-2 bg-gray-900 p-10 rounded-[40px] text-white flex flex-col justify-center">
                     <h3 class="text-2xl font-black mb-2">Diskon Khusus Customer Baru!</h3>
                     <p class="text-gray-400 text-sm mb-6">Dapatkan potongan 20% untuk transaksi pertamamu.</p>

@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 
-#[Fillable(['title', 'description', 'banner', 'category', 'location', 'date', 'start_time', 'end_time', 'quota', 'price', 'user_id'])]
+#[Fillable(['title', 'description', 'banner', 'category', 'location', 'date', 'start_time', 'end_time', 'quota', 'price', 'user_id', 'organizer_id'])]
 class Event extends Model
 {
     public function user()

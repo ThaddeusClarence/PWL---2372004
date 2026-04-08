@@ -4,83 +4,87 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
         .font-organizer { font-family: 'Plus Jakarta Sans', sans-serif; }
+        .stat-card-premium { background: white; border: 1px solid #F1F5F9; transition: all 0.4s; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.05); }
+        .stat-card-premium:hover { transform: translateY(-10px); box-shadow: 0 40px 80px -20px rgba(79, 70, 229, 0.12); border-color: #4f46e5; }
+        .custom-scrollbar::-webkit-scrollbar { width: 5px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #E2E8F0; border-radius: 10px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #CBD5E1; }
     </style>
 
     <div class="font-organizer bg-[#F9FAFB] min-h-screen py-8">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             
             {{-- Modern Header --}}
-            <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-12 gap-6 bg-white p-8 rounded-[40px] shadow-sm border border-gray-100">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-12 gap-6 bg-white p-8 rounded-[40px] shadow-[0_30px_80px_-20px_rgba(0,0,0,0.1)] border border-gray-100">
                 <div>
                     <span class="text-indigo-600 font-bold text-xs uppercase tracking-[0.2em] mb-2 block">Organizer Performance Profile</span>
                     <h2 class="text-4xl font-black text-gray-900 leading-tight tracking-tight">Halo, {{ Auth::user()->name }} Welcome Back 👋</h2>
                     <p class="text-gray-400 font-medium mt-1">Pantau kesuksesan event Anda hari ini melalui dashboard analitik real-time.</p>
                 </div>
-                <div class="flex items-center gap-3">
                     <div class="text-right mr-4 hidden md:block">
                         <p class="text-xs font-bold text-gray-400 uppercase">Status Partner</p>
                         <p class="text-sm font-black text-emerald-600">Terverifikasi ✓</p>
                     </div>
-                    <button class="px-8 py-4 bg-gray-900 text-white font-black rounded-2xl hover:bg-black transition-all shadow-xl active:scale-95 flex items-center gap-2 uppercase text-xs tracking-widest">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M12 4v16m8-8H4"></path></svg>
-                        Create Event
-                    </button>
                 </div>
             </div>
 
-            {{-- Stats Grid with Dynamic Colors --}}
+            {{-- Statistik Utama (Visual Identik Admin) --}}
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
-                <div class="bg-indigo-600 p-8 rounded-[40px] shadow-2xl shadow-indigo-100 flex flex-col justify-between group overflow-hidden relative">
-                    <div class="z-10 relative">
-                        <p class="text-xs font-bold text-indigo-100 uppercase tracking-widest mb-1 opacity-80 italic">Penghasilan Total</p>
-                        <h3 class="text-3xl font-black text-white leading-none">Rp {{ number_format($totalRevenue, 0, ',', '.') }}</h3>
+                
+                {{-- Total Pendapatan (Emerald) --}}
+                <div class="stat-card-premium p-8 rounded-[32px] flex flex-col justify-between">
+                    <div>
+                        <div class="w-12 h-12 bg-emerald-50 rounded-2xl flex items-center justify-center text-emerald-600 mb-6">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        </div>
+                        <p class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-1">Total Pendapatan</p>
+                        <h3 class="text-3xl font-black text-gray-900 leading-tight tracking-tight">Rp {{ number_format($totalRevenue, 0, ',', '.') }}</h3>
                     </div>
-                    <div class="mt-8 z-10 relative">
-                        <span class="text-[10px] font-black bg-white/20 text-white px-3 py-1 rounded-full uppercase italic">Payout Available</span>
-                    </div>
-                    <div class="absolute -right-4 -bottom-4 opacity-10 group-hover:scale-110 transition duration-500">
-                        <svg class="w-32 h-32" fill="currentColor" viewBox="0 0 20 20"><path d="M4 4a2 2 0 00-2 2v1h16V6a2 2 0 00-2-2H4z"></path><path fill-rule="evenodd" d="M18 9H2v5a2 2 0 002 2h12a2 2 0 002-2V9zM4 13a1 1 0 011-1h1a1 1 0 110 2H5a1 1 0 01-1-1zm5-1a1 1 0 100 2h1a1 1 0 100-2H9z" clip-rule="evenodd"></path></svg>
-                    </div>
+                    <p class="text-[10px] font-bold text-emerald-600 mt-4 uppercase tracking-[0.2em] italic underline">Detail Keuangan</p>
                 </div>
 
-                <div class="bg-white p-8 rounded-[40px] border border-gray-100 shadow-sm flex flex-col justify-between group">
+                {{-- Tiket Terjual (Orange) --}}
+                <div class="stat-card-premium p-8 rounded-[32px] flex flex-col justify-between">
                     <div>
-                        <div class="w-12 h-12 bg-blue-50 text-blue-600 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-blue-600 group-hover:text-white transition-colors duration-300">
+                        <div class="w-12 h-12 bg-orange-50 rounded-2xl flex items-center justify-center text-orange-600 mb-6">
                             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 5v2m0 4v2m0 4v2M5 5a2 2 0 012-2h10a2 2 0 012 2v14a2 2 0 01-2 2H7a2 2 0 01-2-2V5z"></path></svg>
                         </div>
-                        <p class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-1">Tiket Konfirmasi</p>
-                        <h3 class="text-3xl font-black text-gray-900">{{ $totalSalesCount }}</h3>
+                        <p class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-1">Tiket Terjual</p>
+                        <h3 class="text-3xl font-black text-gray-900 leading-tight tracking-tight">{{ $totalSalesCount }}</h3>
                     </div>
-                    <p class="text-[10px] font-bold text-blue-500 mt-4 uppercase">View Sales Report ➔</p>
+                    <p class="text-[10px] font-bold text-orange-600 mt-4 uppercase tracking-[0.2em]">E-Ticket Aktif</p>
                 </div>
 
-                <div class="bg-white p-8 rounded-[40px] border border-gray-100 shadow-sm flex flex-col justify-between group">
+                {{-- Event Managed (Indigo) --}}
+                <div class="stat-card-premium p-8 rounded-[32px] flex flex-col justify-between border-2 border-indigo-100 bg-indigo-50/10">
                     <div>
-                        <div class="w-12 h-12 bg-pink-50 text-pink-600 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-pink-600 group-hover:text-white transition-colors duration-300">
+                        <div class="w-12 h-12 bg-indigo-600 text-white rounded-2xl flex items-center justify-center mb-6 shadow-lg shadow-indigo-100">
                             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
                         </div>
-                        <p class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-1">Event Managed</p>
-                        <h3 class="text-3xl font-black text-gray-900">{{ $totalEvents }}</h3>
+                        <p class="text-xs font-bold text-indigo-400 uppercase tracking-widest mb-1">Event Managed</p>
+                        <h3 class="text-3xl font-black text-indigo-600 leading-tight tracking-tight">{{ $totalEvents }}</h3>
                     </div>
-                    <p class="text-[10px] font-bold text-pink-500 mt-4 uppercase">My Events ➔</p>
+                    <p class="text-[10px] font-bold text-indigo-400 mt-4 uppercase tracking-[0.2em] italic">Active Records</p>
                 </div>
 
-                <div class="bg-gray-900 p-8 rounded-[40px] shadow-sm flex flex-col justify-between group">
+                {{-- Engagement (Gray/Dark) --}}
+                <div class="bg-gray-900 p-8 rounded-[32px] shadow-sm flex flex-col justify-between group">
                     <div>
                         <div class="w-12 h-12 bg-white/10 text-white rounded-2xl flex items-center justify-center mb-6">
                             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                         </div>
-                        <p class="text-xs font-bold text-gray-500 uppercase tracking-widest mb-1 italic">Engagement</p>
-                        <h3 class="text-3xl font-black text-white">{{ $totalEvents > 0 ? round($totalSalesCount / $totalEvents, 1) : 0 }}</h3>
+                        <p class="text-xs font-bold text-gray-500 uppercase tracking-widest mb-1 italic">Average Performance</p>
+                        <h3 class="text-3xl font-black text-white leading-tight tracking-tight">{{ $totalEvents > 0 ? round($totalSalesCount / $totalEvents, 1) : 0 }}</h3>
                     </div>
-                    <p class="text-[10px] font-bold text-white/40 mt-4 uppercase tracking-[0.2em]">Avg Sales/Event</p>
+                    <p class="text-[10px] font-bold text-white/40 mt-4 uppercase tracking-[0.2em]">Sales / Event Rate</p>
                 </div>
             </div>
 
             {{-- Charts & Performance Grid --}}
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-10 mb-12">
                 {{-- Sales Trend Chart --}}
-                <div class="lg:col-span-2 bg-white p-10 rounded-[40px] shadow-sm border border-gray-100 relative group overflow-hidden">
+                <div class="lg:col-span-2 bg-white p-10 rounded-[40px] shadow-[0_30px_100px_-20px_rgba(0,0,0,0.08)] border border-gray-100 relative group overflow-hidden">
                     <div class="flex justify-between items-center mb-10 z-10 relative">
                         <div>
                             <h3 class="text-xl font-black text-gray-900">Analitik Penjualan (7 Hari)</h3>
@@ -91,15 +95,20 @@
                              <span class="text-[10px] font-black text-indigo-600 uppercase tracking-widest">LIVE DATA</span>
                         </div>
                     </div>
-                    <div class="h-[320px] w-full">
+                    <div class="h-[400px] w-full relative">
                         <canvas id="organizerTrendChart"></canvas>
+                        @if($salesTrend->isEmpty())
+                            <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
+                                <p class="text-[10px] font-black text-gray-300 uppercase tracking-[0.3em]">Hanya Menunggu Data Penjualan Masuk...</p>
+                            </div>
+                        @endif
                     </div>
                 </div>
 
                 {{-- Event Performance Overview --}}
                 <div class="lg:col-span-1 bg-white p-10 rounded-[40px] shadow-sm border border-gray-100 flex flex-col">
-                    <h3 class="text-xl font-black text-gray-900 mb-8 leading-tight">Performa Event 📊</h3>
-                    <div class="space-y-6 flex-1 overflow-y-auto max-h-[350px] pr-2 custom-scrollbar">
+                    <h3 class="text-xl font-black text-gray-900 mb-8 leading-tight">Performa Event Analytics</h3>
+                    <div class="space-y-6 flex-1 overflow-y-auto max-h-[350px] pr-4 custom-scrollbar">
                         @foreach($eventPerformance as $eventPerf)
                         <div class="p-5 bg-gray-50 rounded-3xl group hover:bg-indigo-50 transition duration-300">
                             <div class="flex justify-between items-start mb-3">
@@ -117,14 +126,20 @@
                         </div>
                         @endforeach
                     </div>
-                    <a href="{{ route('admin.export.excel') }}" class="mt-8 block text-center py-4 w-full bg-indigo-600 text-white font-black rounded-2xl text-[10px] uppercase tracking-widest hover:bg-black transition shadow-lg">
-                        Generate Excel Report
-                    </a>
+                    <div class="mt-auto space-y-3">
+                        <a href="{{ route('admin.export.excel') }}" class="block text-center py-4 w-full bg-indigo-600 text-white font-black rounded-2xl text-[10px] uppercase tracking-widest hover:bg-black transition shadow-lg shadow-indigo-100 flex items-center justify-center gap-2">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2a2 2 0 00-2-2H5a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2zm0 0V5a2 2 0 012-2h2a2 2 0 012 2v12a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
+                            Generate Excel Report
+                        </a>
+                        <a href="{{ route('admin.export.pdf') }}" class="block text-center py-4 w-full bg-white border-2 border-gray-100 text-gray-900 font-black rounded-2xl text-[10px] uppercase tracking-widest hover:border-red-500 hover:text-red-500 transition">
+                            Download PDF Summary
+                        </a>
+                    </div>
                 </div>
             </div>
 
             {{-- Recent Sales Table - Premium Look --}}
-            <div class="bg-white rounded-[40px] border border-gray-100 shadow-sm overflow-hidden mb-20">
+            <div class="bg-white rounded-[40px] border border-gray-100 shadow-[0_40px_120px_-30px_rgba(0,0,0,0.12)] overflow-hidden mb-20">
                 <div class="p-10 border-b border-gray-50 flex justify-between items-center">
                     <div>
                         <h3 class="text-2xl font-black text-gray-900 leading-tight">Penjualan Terbaru ✨</h3>

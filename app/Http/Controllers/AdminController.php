@@ -125,4 +125,78 @@ class AdminController extends Controller
 
         return view('admin.organizers.show', compact('organizer', 'stats'));
     }
+
+    /**
+     * Manajemen Customer Oleh Admin
+     */
+    public function customerIndex()
+    {
+        $customers = User::where('role', 'customer')->latest()->get();
+        return view('admin.customers.index', compact('customers'));
+    }
+
+    public function customerDestroy($id)
+    {
+        $user = User::findOrFail($id);
+        
+        if ($user->role !== 'customer') {
+            return back()->with('error', 'Hanya akun customer yang dapat dihapus dari sini.');
+        }
+
+        $user->delete();
+
+        return redirect()->route('admin.customers.index')->with('success', 'Akun Customer berhasil dihapus!');
+    }
+
+    public function customerShow($id)
+    {
+        $customer = User::findOrFail($id);
+        
+        if ($customer->role !== 'customer') {
+            return redirect()->route('admin.customers.index')->with('error', 'Pengguna bukan seorang customer.');
+        }
+
+        // Ambil riwayat pembelian
+        $orders = \App\Models\Order::where('user_id', $customer->id)
+            ->with(['event', 'tickets'])
+            ->latest()
+            ->get();
+
+        return view('admin.customers.show', compact('customer', 'orders'));
+    }
+
+    public function customerUpdatePassword(Request $request, $id)
+    {
+        $request->validate([
+            'new_password' => 'required|string|min:8',
+        ]);
+
+        $user = User::findOrFail($id);
+        $user->update([
+            'password' => \Illuminate\Support\Facades\Hash::make($request->new_password),
+            'password_plain' => $request->new_password,
+        ]);
+
+        return back()->with('success', 'Password customer berhasil diperbarui!');
+    }
+
+    public function updateOrderStatus(Request $request, $id)
+    {
+        $order = \App\Models\Order::findOrFail($id);
+        $order->update(['status' => $request->status]);
+
+        return back()->with('success', 'Status pesanan #' . $id . ' berhasil diubah menjadi ' . strtoupper($request->status));
+    }
+
+    public function waitingListIndex()
+    {
+        $waitingLists = \App\Models\WaitingList::with(['user', 'event'])->latest()->get();
+        return view('admin.waiting-list.index', compact('waitingLists'));
+    }
+
+    public function waitingListDestroy($id)
+    {
+        \App\Models\WaitingList::findOrFail($id)->delete();
+        return back()->with('success', 'Data antrean berhasil dihapus!');
+    }
 }

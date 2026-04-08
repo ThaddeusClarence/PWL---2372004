@@ -4,8 +4,8 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
         .admin-font { font-family: 'Plus Jakarta Sans', sans-serif; }
-        .stat-card { background: white; border: 1px solid #f0f2f5; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
-        .stat-card:hover { border-color: #4f46e5; transform: translateY(-3px); box-shadow: 0 12px 20px -5px rgba(0, 0, 0, 0.04); }
+        .stat-card { background: white; border: 1px solid #F1F5F9; box-shadow: 0 15px 40px -10px rgba(0, 0, 0, 0.04); transition: all 0.4s; }
+        .stat-card:hover { transform: translateY(-8px); box-shadow: 0 30px 60px -12px rgba(0, 0, 0, 0.08); border-color: #4f46e5; }
         .badge { font-weight: 800; text-transform: uppercase; font-size: 0.65rem; border-radius: 8px; }
     </style>
 
@@ -45,16 +45,6 @@
                     </p>
                 </div>
 
-                <div class="stat-card p-8 rounded-[32px] flex flex-col justify-between">
-                    <div>
-                        <div class="w-12 h-12 bg-emerald-50 rounded-2xl flex items-center justify-center text-emerald-600 mb-6">
-                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                        </div>
-                        <p class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-1">Total Pendapatan</p>
-                        <h3 class="text-3xl font-black text-gray-900">Rp {{ number_format($totalRevenue, 0, ',', '.') }}</h3>
-                    </div>
-                    <p class="text-xs font-bold text-indigo-500 mt-4 underline">Detail Keuangan</p>
-                </div>
 
                 <div class="stat-card p-8 rounded-[32px] flex flex-col justify-between border-2 border-indigo-100 bg-indigo-50/10">
                     <div>
@@ -67,32 +57,22 @@
                     <p class="text-xs font-medium text-indigo-400 mt-4 italic">Berlangsung Saat Ini</p>
                 </div>
 
-                <div class="stat-card p-8 rounded-[32px] flex flex-col justify-between">
-                    <div>
-                        <div class="w-12 h-12 bg-orange-50 rounded-2xl flex items-center justify-center text-orange-600 mb-6">
-                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 5v2m0 4v2m0 4v2M5 5a2 2 0 012-2h10a2 2 0 012 2v14a2 2 0 01-2 2H7a2 2 0 01-2-2V5z"></path></svg>
-                        </div>
-                        <p class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-1">Tiket Terjual</p>
-                        <h3 class="text-3xl font-black text-gray-900">{{ $totalTickets }}</h3>
-                    </div>
-                    <p class="text-xs font-bold text-orange-600 mt-4 flex items-center gap-1">E-Ticket Aktif</p>
-                </div>
 
                 <div class="stat-card p-8 rounded-[32px] flex flex-col justify-between">
                     <div>
-                        <div class="w-12 h-12 bg-blue-50 rounded-2xl flex items-center justify-center text-blue-600 mb-6">
-                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m4 0h1m-5 10h5m-5 4h5m2-24v18a2 2 0 002 2h2a2 2 0 002-2V7a2 2 0 00-2-2h-2a2 2 0 00-2 2z"></path></svg>
+                        <div class="w-12 h-12 bg-emerald-50 text-emerald-600 rounded-2xl flex items-center justify-center mb-6">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
                         </div>
                         <p class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-1">Penyelenggara</p>
                         <h3 class="text-3xl font-black text-gray-900">{{ $totalOrganizer }}</h3>
                     </div>
-                    <p class="text-xs font-bold text-blue-600 mt-4 flex items-center gap-1">Status: Terverifikasi</p>
                 </div>
+
             </div>
 
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-10">
                 {{-- Chart Section --}}
-                <div class="lg:col-span-2 bg-white p-10 rounded-[40px] border border-gray-100 shadow-sm">
+                <div class="lg:col-span-2 bg-white p-10 rounded-[40px] border border-gray-100 shadow-[0_25px_70px_-15px_rgba(0,0,0,0.06)]">
                     <div class="flex justify-between items-center mb-10">
                         <h3 class="text-xl font-black text-gray-900">Pertumbuhan User 📈</h3>
                         <select class="text-xs border-none bg-gray-50 rounded-lg py-2 pl-3 pr-8 font-bold text-gray-500 outline-none">
@@ -114,6 +94,7 @@
                         <a href="{{ route('admin.events.create') }}" class="block w-full text-center bg-white/10 hover:bg-white/20 py-4 rounded-2xl text-xs font-black uppercase tracking-widest transition">Buat Event Baru</a>
                         <a href="{{ route('admin.events.index') }}" class="block w-full text-center bg-white/10 hover:bg-white/20 py-4 rounded-2xl text-xs font-black uppercase tracking-widest transition">Kelola Semua Event</a>
                         <a href="{{ route('admin.organizers.index') }}" class="block w-full text-center bg-white/10 hover:bg-white/20 py-4 rounded-2xl text-xs font-black uppercase tracking-widest transition border-2 border-indigo-500/20">Manajemen Organizer</a>
+                        <a href="{{ route('admin.customers.index') }}" class="block w-full text-center bg-white/10 hover:bg-white/20 py-4 rounded-2xl text-xs font-black uppercase tracking-widest transition border-2 border-emerald-500/20">Manajemen Customer</a>
                         </div>
                     </div>
 
@@ -139,7 +120,7 @@
             </div>
 
             {{-- Recent Users Table --}}
-            <div class="mt-12 bg-white rounded-[40px] border border-gray-100 shadow-sm overflow-hidden mb-20">
+            <div class="mt-12 bg-white rounded-[40px] border border-gray-100 shadow-[0_30px_80px_-20px_rgba(0,0,0,0.08)] overflow-hidden mb-20">
                 <div class="p-10 border-b border-gray-50 flex justify-between items-center">
                     <h3 class="text-2xl font-black text-gray-900 leading-none">Pengguna Terbaru ✨</h3>
                     <button class="text-sm font-bold text-indigo-600 hover:underline">Lihat Semua User</button>

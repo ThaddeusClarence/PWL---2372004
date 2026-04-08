@@ -13,8 +13,8 @@
         .bg-soft { background-color: #fbfcfd; }
         .glass-nav { background: rgba(251, 252, 253, 0.8); backdrop-filter: blur(20px); border-bottom: 1px solid rgba(229, 231, 235, 0.5); }
         .hero-gradient { background: radial-gradient(circle at 50% 50%, #eff6ff 0%, #fbfcfd 100%); }
-        .feature-card { background: white; border: 1px solid #f0f2f5; transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
-        .feature-card:hover { transform: translateY(-8px); border-color: #4f46e5; box-shadow: 0 20px 40px -12px rgba(79, 70, 229, 0.1); }
+        .feature-card { background: white; border: 1px solid #f0f2f5; transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: 0 20px 50px -12px rgba(0, 0, 0, 0.05); }
+        .feature-card:hover { transform: translateY(-12px); border-color: #4f46e5; box-shadow: 0 40px 80px -15px rgba(79, 70, 229, 0.15); }
         .btn-premium { background: #1a1c21; color: white; transition: all 0.3s; }
         .btn-premium:hover { background: #4f46e5; transform: scale(1.02); box-shadow: 0 10px 20px -5px rgba(79, 70, 229, 0.3); }
     </style>
@@ -95,6 +95,55 @@
                 <span>EVENT.CO</span>
                 <span>GLOBAL TECH</span>
                 <span>DIGITAL.ID</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Explore Events Section -->
+    <section id="explore" class="py-32 px-6 bg-[#F8FAFC]">
+        <div class="max-w-7xl mx-auto">
+            <div class="flex flex-col md:flex-row justify-between items-end mb-20">
+                <div class="max-w-2xl">
+                    <span class="text-indigo-600 font-black tracking-[0.2em] text-[10px] uppercase mb-4 block italic">Tersedia Sekarang</span>
+                    <h2 class="text-5xl font-black text-gray-900 leading-tight">Jelajahi Event <br> <span class="text-indigo-600 italic font-serif">Pilihan</span> Terbaik.</h2>
+                </div>
+                <p class="text-gray-400 font-medium max-w-sm mb-2 text-sm leading-relaxed italic">Temukan pengalaman tak terlupakan dari berbagai kategori event premium yang kami kurasi khusus untuk anda.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
+                @forelse($events as $event)
+                <div class="group bg-white rounded-[40px] border border-gray-100 shadow-[0_25px_60px_-15px_rgba(0,0,0,0.08)] overflow-hidden hover:shadow-[0_40px_100px_-20px_rgba(79,70,229,0.2)] transition-all duration-700 hover:-translate-y-4">
+                    <div class="relative h-64 overflow-hidden">
+                        <img src="{{ $event->banner ? asset('storage/' . $event->banner) : 'https://images.unsplash.com/photo-1540575861501-7cf05a4b125a?auto=format&fit=crop&q=80&w=800' }}" 
+                             class="w-full h-full object-cover transition duration-700 group-hover:scale-110">
+                        <div class="absolute top-6 right-6 px-4 py-1.5 bg-white/90 backdrop-blur-md rounded-full text-[10px] font-black text-indigo-600 shadow-sm uppercase tracking-widest">
+                            {{ $event->category }}
+                        </div>
+                    </div>
+                    <div class="p-10">
+                        <h3 class="text-2xl font-black mb-4 text-gray-900 group-hover:text-indigo-600 transition tracking-tight">{{ $event->title }}</h3>
+                        <div class="flex items-center gap-4 mb-8">
+                            <div class="px-3 py-1 bg-indigo-50 rounded-xl text-indigo-600 text-[10px] font-black uppercase tracking-widest whitespace-nowrap">
+                                {{ \Carbon\Carbon::parse($event->date)->format('d M Y') }}
+                            </div>
+                            <span class="text-xs font-bold text-gray-300 italic truncate">{{ $event->location }}</span>
+                        </div>
+                        <div class="flex justify-between items-center pt-8 border-t border-gray-50">
+                            <div>
+                                <span class="text-[9px] font-black text-gray-300 block uppercase tracking-widest">Mulai Dari</span>
+                                <span class="text-xl font-black text-gray-900 tracking-tighter">Rp{{ number_format($event->price, 0, ',', '.') }}</span>
+                            </div>
+                            <a href="{{ route('events.show', $event->id) }}" class="w-14 h-14 bg-gray-900 rounded-2xl text-white flex items-center justify-center hover:bg-indigo-600 transition-all active:scale-90 shadow-lg shadow-gray-100 group-hover:rotate-12">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                @empty
+                <div class="col-span-3 py-20 bg-white rounded-[40px] border-2 border-dashed border-gray-100 text-center">
+                    <p class="text-gray-300 font-black uppercase tracking-[0.2em] italic">Belum ada event yang tersedia saat ini.</p>
+                </div>
+                @endforelse
             </div>
         </div>
     </section>

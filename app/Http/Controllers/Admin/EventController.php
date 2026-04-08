@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Event;
 use Illuminate\Http\Request;
+use App\Models\User;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
 
@@ -18,7 +19,8 @@ class EventController extends Controller
 
     public function create()
     {
-        return view('admin.events.create');
+        $organizers = User::where('role', 'organizer')->get();
+        return view('admin.events.create', compact('organizers'));
     }
 
     public function store(Request $request)
@@ -34,9 +36,10 @@ class EventController extends Controller
             'ticket_names' => 'required|array',
             'ticket_prices' => 'required|array',
             'ticket_quotas' => 'required|array',
+            'organizer_id' => 'nullable|exists:users,id',
         ]);
 
-        $data = $request->only(['title', 'description', 'category', 'location', 'date', 'start_time']);
+        $data = $request->only(['title', 'description', 'category', 'location', 'date', 'start_time', 'organizer_id']);
         $data['user_id'] = Auth::id();
 
         // Calculate summary fields
@@ -64,7 +67,8 @@ class EventController extends Controller
 
     public function edit(Event $event)
     {
-        return view('admin.events.edit', compact('event'));
+        $organizers = User::where('role', 'organizer')->get();
+        return view('admin.events.edit', compact('event', 'organizers'));
     }
 
     public function update(Request $request, Event $event)
@@ -75,23 +79,49 @@ class EventController extends Controller
             'location' => 'required|string',
             'date' => 'required|date',
             'start_time' => 'required',
-            'quota' => 'required|integer|min:1',
-            'price' => 'required|numeric|min:0',
+            'ticket_ids' => 'required|array',
+            'ticket_names' => 'required|array',
+            'ticket_prices' => 'required|array',
+            'ticket_quotas' => 'required|array',
+            'organizer_id' => 'nullable|exists:users,id',
         ]);
 
-        $data = $request->all();
+        $data = $request->only(['title', 'category', 'location', 'date', 'start_time', 'organizer_id']);
+
+        // Update Ticket Types & Calculate Summary
+        $newTotalQuota = array_sum($request->ticket_quotas);
+        $newMinPrice = min($request->ticket_prices);
+
+        $data['quota'] = $newTotalQuota;
+        $data['price'] = $newMinPrice;
 
         if ($request->hasFile('banner')) {
-            // Hapus banner lama
             if ($event->banner) {
                 Storage::disk('public')->delete($event->banner);
             }
             $data['banner'] = $request->file('banner')->store('events/banners', 'public');
         }
 
+        // 1. Update Tabel Event
         $event->update($data);
 
-        return redirect()->route('admin.events.index')->with('success', 'Event berhasil diperbarui!');
+        // 2. Update Masing-masing Kategori Tiket
+        foreach ($request->ticket_ids as $index => $id) {
+            $ticketType = \App\Models\TicketType::findOrFail($id);
+            
+            // Logika penyesuaian remaining_quota
+            // Jika kuota ditambah 10, maka sisa tiket juga ditambah 10
+            $diff = $request->ticket_quotas[$index] - $ticketType->quota;
+            
+            $ticketType->update([
+                'name' => $request->ticket_names[$index],
+                'price' => $request->ticket_prices[$index],
+                'quota' => $request->ticket_quotas[$index],
+                'remaining_quota' => $ticketType->remaining_quota + $diff,
+            ]);
+        }
+
+        return redirect()->route('admin.events.index')->with('success', 'Event dan Kategori Tiket berhasil diperbarui!');
     }
 
     public function destroy(Event $event)
