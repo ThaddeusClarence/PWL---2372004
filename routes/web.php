@@ -85,6 +85,11 @@ Route::middleware(['auth'])->group(function () {
         // Download file dengan nama ini
         return $pdf->download('Laporan_User_EventMaster.pdf');
     })->name('admin.export.pdf');
+
+    // FITUR EXPORT EXCEL
+    Route::get('/admin/export-excel', function () {
+        return \Maatwebsite\Excel\Facades\Excel::download(new \App\Exports\SalesExport, 'Laporan_Penjualan_EventMaster.xlsx');
+    })->name('admin.export.excel');
 });
 
 // 4. Route Profile (Bawaan Laravel Breeze)

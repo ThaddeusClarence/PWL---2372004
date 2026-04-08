@@ -117,9 +117,9 @@
                         </div>
                         @endforeach
                     </div>
-                    <button class="mt-8 py-4 w-full bg-gray-50 text-gray-400 font-black rounded-2xl text-[10px] uppercase tracking-widest hover:bg-gray-100 transition shadow-sm italic italic">
+                    <a href="{{ route('admin.export.excel') }}" class="mt-8 block text-center py-4 w-full bg-indigo-600 text-white font-black rounded-2xl text-[10px] uppercase tracking-widest hover:bg-black transition shadow-lg">
                         Generate Excel Report
-                    </button>
+                    </a>
                 </div>
             </div>
 

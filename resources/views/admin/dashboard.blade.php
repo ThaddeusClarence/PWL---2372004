@@ -125,9 +125,14 @@
                         <p class="text-xs text-gray-400 mb-8 font-medium">Export data pengguna terbaru untuk keperluan pelaporan.</p>
                         
                         @if (Route::has('admin.export.pdf'))
-                            <a href="{{ route('admin.export.pdf') }}" class="block w-full py-4 text-center border-2 border-red-50 text-red-600 bg-red-50/30 rounded-2xl text-xs font-black uppercase tracking-widest hover:bg-red-50 transition">
-                                Download Laporan
-                            </a>
+                            <div class="grid grid-cols-2 gap-3 mt-8">
+                                <a href="{{ route('admin.export.pdf') }}" class="py-4 text-center border-2 border-red-50 text-red-600 bg-red-50/30 rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-red-50 transition">
+                                    PDF Report
+                                </a>
+                                <a href="{{ route('admin.export.excel') }}" class="py-4 text-center border-2 border-emerald-50 text-emerald-600 bg-emerald-50/30 rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-emerald-50 transition">
+                                    Excel Report
+                                </a>
+                            </div>
                         @endif
                     </div>
                 </div>
