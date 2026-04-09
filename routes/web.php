@@ -76,6 +76,8 @@ Route::middleware(['auth'])->group(function () {
 
     // Dashboard Organizer
     Route::get('/organizer/dashboard', [OrganizerController::class, 'index'])->name('organizer.dashboard');
+    Route::get('/organizer/reports', [OrganizerController::class, 'reports'])->name('organizer.reports');
+    Route::get('/organizer/reports/pdf', [OrganizerController::class, 'exportPdf'])->name('organizer.reports.pdf');
 
     // Dashboard Customer
     Route::get('/customer/dashboard', [CustomerController::class, 'index'])->name('customer.dashboard');

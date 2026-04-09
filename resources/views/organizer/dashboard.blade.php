@@ -22,7 +22,14 @@
                     <h2 class="text-4xl font-black text-gray-900 leading-tight tracking-tight">Halo, {{ Auth::user()->name }} Welcome Back 👋</h2>
                     <p class="text-gray-400 font-medium mt-1">Pantau kesuksesan event Anda hari ini melalui dashboard analitik real-time.</p>
                 </div>
-                    <div class="text-right mr-4 hidden md:block">
+                <div class="flex flex-col sm:flex-row gap-4">
+                    <a href="{{ route('organizer.reports') }}" class="group relative px-8 py-4 bg-indigo-600 text-white font-black rounded-2xl hover:bg-black transition-all duration-300 shadow-xl shadow-indigo-100 flex items-center gap-3 overflow-hidden">
+                        <div class="absolute inset-0 bg-white/10 translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
+                        <svg class="w-5 h-5 z-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V5a2 2 0 012-2h2a2 2 0 012 2v12a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
+                        <span class="z-10 text-xs tracking-widest uppercase">Full Reporting</span>
+                    </a>
+                </div>
+                <div class="text-right mr-4 hidden md:block">
                         <p class="text-xs font-bold text-gray-400 uppercase">Status Partner</p>
                         <p class="text-sm font-black text-emerald-600">Terverifikasi ✓</p>
                     </div>
@@ -127,12 +134,12 @@
                         @endforeach
                     </div>
                     <div class="mt-auto space-y-3">
-                        <a href="{{ route('admin.export.excel') }}" class="block text-center py-4 w-full bg-indigo-600 text-white font-black rounded-2xl text-[10px] uppercase tracking-widest hover:bg-black transition shadow-lg shadow-indigo-100 flex items-center justify-center gap-2">
+                        <a href="{{ route('organizer.reports') }}" class="block text-center py-4 w-full bg-indigo-600 text-white font-black rounded-2xl text-[10px] uppercase tracking-widest hover:bg-black transition shadow-lg shadow-indigo-100 flex items-center justify-center gap-2">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2a2 2 0 00-2-2H5a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2zm0 0V5a2 2 0 012-2h2a2 2 0 012 2v12a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
-                            Generate Excel Report
+                            Explore Detail Analytics
                         </a>
-                        <a href="{{ route('admin.export.pdf') }}" class="block text-center py-4 w-full bg-white border-2 border-gray-100 text-gray-900 font-black rounded-2xl text-[10px] uppercase tracking-widest hover:border-red-500 hover:text-red-500 transition">
-                            Download PDF Summary
+                        <a href="{{ route('organizer.reports.pdf') }}" class="block text-center py-4 w-full bg-white border-2 border-gray-100 text-gray-900 font-black rounded-2xl text-[10px] uppercase tracking-widest hover:border-red-500 hover:text-red-500 transition">
+                            Download Financial PDF
                         </a>
                     </div>
                 </div>

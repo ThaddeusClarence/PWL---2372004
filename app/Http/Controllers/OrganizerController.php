@@ -70,4 +70,69 @@ class OrganizerController extends Controller
             'eventPerformance'
         ));
     }
+
+    /**
+     * Display the detailed reporting page.
+     */
+    public function reports()
+    {
+        $user = Auth::user();
+
+        // Data yang sama dengan dashboard tapi lebih detail untuk reporting
+        $totalEvents = \App\Models\Event::where('organizer_id', $user->id)->count();
+        $totalRevenue = \App\Models\Order::whereHas('event', function($query) use ($user) {
+            $query->where('organizer_id', $user->id);
+        })->where('status', 'paid')->sum('total_price');
+
+        $eventPerformance = \App\Models\Event::where('organizer_id', $user->id)
+            ->withCount(['tickets' => function($q) {
+                $q->whereHas('order', function($o) { $o->where('status', 'paid'); });
+            }])
+            ->withSum(['orders' => function($q) {
+                $q->where('status', 'paid');
+            }], 'total_price')
+            ->get();
+
+        $salesTrend = \App\Models\Order::whereHas('event', function($query) use ($user) {
+            $query->where('organizer_id', $user->id);
+        })
+        ->where('status', 'paid')
+        ->selectRaw('DATE(created_at) as date, SUM(total_price) as total')
+        ->groupBy('date')
+        ->orderBy('date', 'ASC')
+        ->get();
+
+        return view('organizer.reports', compact('totalEvents', 'totalRevenue', 'eventPerformance', 'salesTrend'));
+    }
+
+    /**
+     * Export the report to PDF.
+     */
+    public function exportPdf()
+    {
+        $user = Auth::user();
+        
+        $totalEvents = \App\Models\Event::where('organizer_id', $user->id)->count();
+        $totalRevenue = \App\Models\Order::whereHas('event', function($query) use ($user) {
+            $query->where('organizer_id', $user->id);
+        })->where('status', 'paid')->sum('total_price');
+
+        $eventPerformance = \App\Models\Event::where('organizer_id', $user->id)
+            ->withCount(['tickets' => function($q) {
+                $q->whereHas('order', function($o) { $o->where('status', 'paid'); });
+            }])
+            ->withSum(['orders' => function($q) {
+                $q->where('status', 'paid');
+            }], 'total_price')
+            ->get();
+
+        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('organizer.reports-pdf', compact(
+            'user', 
+            'totalEvents', 
+            'totalRevenue', 
+            'eventPerformance'
+        ));
+
+        return $pdf->download('Financial_Report_Organizer_' . $user->name . '.pdf');
+    }
 }
