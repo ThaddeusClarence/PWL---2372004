@@ -125,12 +125,31 @@
                     </div>
                     <div class="flex items-center gap-4 w-full md:w-auto justify-between md:justify-end">
                         <div class="text-right">
-                            <p class="text-[10px] font-black text-gray-300 uppercase tracking-widest">KODE TIKET</p>
-                            <p class="text-sm font-bold text-gray-800 tracking-tighter">{{ $ticket->ticket_code }}</p>
+                            <p class="text-[10px] font-black text-gray-300 uppercase tracking-widest">Status / Kode</p>
+                            <div class="flex flex-col items-end">
+                                @if(!$ticket->is_used)
+                                    <span class="text-[9px] font-black text-emerald-600 uppercase tracking-widest bg-emerald-50 px-2 py-0.5 rounded-full mb-1">Siap Digunakan</span>
+                                @else
+                                    <span class="text-[9px] font-black text-red-500 uppercase tracking-widest bg-red-50 px-2 py-0.5 rounded-full mb-1">Sudah Digunakan</span>
+                                @endif
+                                <p class="text-sm font-bold text-gray-800 tracking-tighter">{{ $ticket->ticket_code }}</p>
+                            </div>
                         </div>
-                        <a href="{{ route('checkout.success', $ticket->order_id) }}" class="p-4 bg-indigo-50 text-indigo-600 rounded-2xl hover:bg-indigo-600 hover:text-white transition group">
-                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z"></path></svg>
-                        </a>
+                        <div class="flex items-center gap-2">
+                            <a href="{{ route('checkout.success', $ticket->order_id) }}" class="p-4 bg-indigo-50 text-indigo-600 rounded-2xl hover:bg-indigo-600 hover:text-white transition group">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z"></path></svg>
+                            </a>
+                            
+                            @if($ticket->is_used)
+                            <form action="{{ route('customer.tickets.destroy', $ticket->id) }}" method="POST" onsubmit="return confirm('Buang tiket ini?')" class="inline">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="p-4 bg-red-50 text-red-600 rounded-2xl hover:bg-red-600 hover:text-white transition" title="Buang Tiket">
+                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                                </button>
+                            </form>
+                            @endif
+                        </div>
                     </div>
                 </div>
                 @endforeach

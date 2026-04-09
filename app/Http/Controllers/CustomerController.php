@@ -82,4 +82,16 @@ class CustomerController extends Controller
 
         return back()->with('success', 'Riwayat transaksi berhasil dihapus.');
     }
+
+    public function ticketDestroy(Ticket $ticket)
+    {
+        // Pastikan tiket milik user yang login
+        if ($ticket->user_id !== Auth::id()) {
+            abort(403);
+        }
+
+        $ticket->delete();
+
+        return back()->with('success', 'Tiket berhasil dibuang.');
+    }
 }

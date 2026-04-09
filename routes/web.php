@@ -83,6 +83,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/customer/dashboard', [CustomerController::class, 'index'])->name('customer.dashboard');
     Route::get('/customer/ticket/{order}', [CustomerController::class, 'showTicket'])->name('customer.ticket.show');
     Route::delete('/customer/orders/{order}', [CustomerController::class, 'orderDestroy'])->name('customer.orders.destroy');
+    Route::delete('/customer/tickets/{ticket}', [CustomerController::class, 'ticketDestroy'])->name('customer.tickets.destroy');
     Route::post('/events/{event}/waiting-list', [CustomerController::class, 'joinWaitingList'])->name('events.waiting-list');
 
     // FITUR TICKETING (Checkout & Simulasi Pembayaran)
