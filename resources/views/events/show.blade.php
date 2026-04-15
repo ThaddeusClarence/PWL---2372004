@@ -80,7 +80,13 @@
                             </div>
                             <div>
                                 <span class="text-xs font-bold text-gray-400 block">WAKTU</span>
-                                <span class="text-sm font-bold text-gray-800">{{ \Carbon\Carbon::parse($event->start_time)->format('H:i') }} WIB</span>
+                                <span class="text-sm font-bold text-gray-800">
+                                    {{ \Carbon\Carbon::parse($event->start_time)->format('H:i') }}
+                                    @if($event->end_time)
+                                        - {{ \Carbon\Carbon::parse($event->end_time)->format('H:i') }}
+                                    @endif
+                                    WIB
+                                </span>
                             </div>
                         </div>
                     </div>

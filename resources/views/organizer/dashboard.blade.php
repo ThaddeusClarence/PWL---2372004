@@ -112,23 +112,17 @@
                     </div>
                 </div>
 
-                {{-- Payment Distribution Chart --}}
-                <div class="lg:col-span-1 bg-white p-10 rounded-[40px] shadow-[0_30px_100px_-20px_rgba(0,0,0,0.08)] border border-gray-100 relative group overflow-hidden">
-                    <div class="flex justify-between items-center mb-10 z-10 relative">
-                        <div>
-                            <h3 class="text-xl font-black text-gray-900">Pilihan Pembayaran</h3>
-                            <p class="text-xs text-gray-400 font-medium mt-1">Metode yang paling sering digunakan pembeli.</p>
-                        </div>
-                        <div class="flex items-center gap-2">
-                             <div class="w-2 h-2 rounded-full bg-emerald-500"></div>
-                             <span class="text-[10px] font-black text-emerald-600 uppercase tracking-widest">DISTRIBUSI</span>
-                        </div>
+                {{-- Payment Methods Bar Chart --}}
+                <div class="lg:col-span-1 bg-white p-10 rounded-[40px] shadow-[0_30px_100px_-20px_rgba(0,0,0,0.08)] border border-gray-100">
+                    <div class="mb-10">
+                        <h3 class="text-xl font-black text-gray-900 leading-tight">Metode Pembayaran 💳</h3>
+                        <p class="text-xs text-gray-400 font-medium mt-1">Distribusi penggunaan per metode.</p>
                     </div>
-                    <div class="h-[400px] w-full relative flex items-center justify-center">
-                        <canvas id="paymentMethodChart"></canvas>
-                        @if($paymentDistribution->isEmpty())
+                    <div class="h-[400px] w-full relative">
+                        <canvas id="paymentMethodsBarChart"></canvas>
+                        @if(empty($paymentStats) || count($paymentStats) == 0)
                             <div class="absolute inset-0 flex items-center justify-center pointer-events-none bg-white/50 z-20">
-                                <p class="text-[10px] font-black text-gray-400 uppercase tracking-[0.3em] text-center">Belum Ada Data Pembayaran...</p>
+                                <p class="text-[10px] font-black text-gray-400 uppercase tracking-[0.3em] text-center">Belum Ada Data...</p>
                             </div>
                         @endif
                     </div>
@@ -234,8 +228,8 @@
             gradientTrend.addColorStop(0, 'rgba(79, 70, 229, 0.4)');
             gradientTrend.addColorStop(1, 'rgba(79, 70, 229, 0)');
 
-            const labelsTrend = @json($salesTrend->pluck('date')->map(fn($d) => date('d M', strtotime($d))));
-            const dataTrend = @json($salesTrend->pluck('total'));
+            const labelsTrend = @json($salesTrend->pluck('date_label')->map(fn($d) => date('d M', strtotime($d))));
+            const dataTrend = @json($salesTrend->pluck('total_revenue'));
 
             new Chart(ctxTrend, {
                 type: 'line',
@@ -275,40 +269,58 @@
                 }
             });
 
-            // --- PAYMENT DISTRIBUTION CHART ---
-            const ctxPayment = document.getElementById('paymentMethodChart').getContext('2d');
-            const paymentLabels = @json($paymentDistribution->pluck('payment_method_clean'));
-            const paymentData = @json($paymentDistribution->pluck('count'));
+            // --- PAYMENT METHODS BAR CHART ---
+            const ctxPayment = document.getElementById('paymentMethodsBarChart').getContext('2d');
+            const paymentRawData = @json($paymentStats);
+            const targetMethods = ['BCA', 'BNI', 'BRI', 'DANA', 'GoPay'];
+            
+            const paymentLabels = targetMethods;
+            const paymentValues = targetMethods.map(method => paymentRawData[method] || 0);
 
             new Chart(ctxPayment, {
-                type: 'doughnut',
+                type: 'bar',
                 data: {
-                    labels: paymentLabels.length > 0 ? paymentLabels : ['Belum Ada Data'],
+                    labels: paymentLabels,
                     datasets: [{
-                        data: paymentData.length > 0 ? paymentData : [1],
-                        backgroundColor: ['#4f46e5', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899'],
-                        borderWidth: 0,
-                        hoverOffset: 20
+                        label: 'Jumlah Transaksi',
+                        data: paymentValues,
+                        backgroundColor: [
+                            'rgba(79, 70, 229, 0.8)', // Indigo
+                            'rgba(16, 185, 129, 0.8)', // Emerald
+                            'rgba(59, 130, 246, 0.8)', // Blue
+                            'rgba(245, 158, 11, 0.8)', // Amber
+                            'rgba(239, 68, 68, 0.8)'   // Red
+                        ],
+                        borderRadius: 12,
+                        barThickness: 32,
                     }]
                 },
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
-                    cutout: '70%',
-                    plugins: {
-                        legend: { 
-                            position: 'bottom',
-                            labels: {
-                                font: { family: 'Plus Jakarta Sans', weight: 'bold', size: 10 },
-                                usePointStyle: true,
-                                padding: 20
-                            }
-                        },
+                    plugins: { 
+                        legend: { display: false },
                         tooltip: {
                             cornerRadius: 12,
                             padding: 12,
                             titleFont: { family: 'Plus Jakarta Sans', weight: 'bold' },
-                            bodyFont: { family: 'Plus Jakarta Sans' }
+                            bodyFont: { family: 'Plus Jakarta Sans' },
+                            callbacks: {
+                                label: function(context) {
+                                    return context.raw + ' Transaksi';
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: { grid: { display: false }, ticks: { font: { weight: 'bold', family: 'Plus Jakarta Sans', size: 10 } } },
+                        y: { 
+                            beginAtZero: true, 
+                            grid: { color: '#F3F4F6', borderDash: [5, 5] },
+                            ticks: { 
+                                stepSize: 1,
+                                font: { weight: 'bold', family: 'Plus Jakarta Sans', size: 10 }
+                            }
                         }
                     }
                 }

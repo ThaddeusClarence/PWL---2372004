@@ -27,17 +27,27 @@ class OrganizerController extends Controller
         })->where('status', 'paid')->sum('total_price');
 
         // 2. ANALITIK PENJUALAN 7 HARI TERAKHIR
-        $salesTrend = \App\Models\Order::whereHas('event', function($query) use ($user) {
-            $query->where('organizer_id', $user->id);
-        })
-        ->where('status', 'paid')
-        ->where('created_at', '>=', now()->subDays(6))
-        ->selectRaw('DATE(created_at) as date, SUM(total_price) as total')
-        ->groupBy('date')
-        ->orderBy('date', 'ASC')
-        ->get();
+        // 2. TREN PENJUALAN (7 Hari Terakhir)
+        $salesTrend = \App\Models\Order::query()
+            ->join('events', 'orders.event_id', '=', 'events.id')
+            ->where('events.organizer_id', $user->id)
+            ->where('orders.status', 'paid')
+            ->selectRaw('DATE(orders.created_at) as date_label, SUM(orders.total_price) as total_revenue')
+            ->groupBy('date_label')
+            ->orderBy('date_label', 'ASC')
+            ->get();
 
-        // 3. PERFORMANCE PER EVENT (Daftar Event & Detail Penjualannya)
+        // 3. STATISTIK METODE PEMBAYARAN (Bar Chart)
+        $paymentStats = \App\Models\Order::query()
+            ->join('events', 'orders.event_id', '=', 'events.id')
+            ->where('events.organizer_id', $user->id)
+            ->where('orders.status', 'paid')
+            ->selectRaw('orders.payment_method, COUNT(*) as count')
+            ->groupBy('orders.payment_method')
+            ->get()
+            ->pluck('count', 'payment_method');
+
+        // 4. PERFORMANCE PER EVENT (Daftar Event & Detail Penjualannya)
         $eventPerformance = \App\Models\Event::where('organizer_id', $user->id)
             ->withCount(['tickets' => function($q) {
                 $q->whereHas('order', function($o) { $o->where('status', 'paid'); });
@@ -56,24 +66,15 @@ class OrganizerController extends Controller
                 ];
             });
 
-        // 4. ANALITIK METODE PEMBAYARAN (Pie Chart)
-        $paymentDistribution = \App\Models\Order::whereHas('event', function($query) use ($user) {
-            $query->where('organizer_id', $user->id);
-        })
-        ->where('status', 'paid')
-        ->selectRaw('CASE 
-            WHEN payment_method IS NULL THEN "Lainnya" 
-            WHEN payment_method = "Unknown" THEN "Lainnya" 
-            ELSE payment_method 
-        END as payment_method_clean, COUNT(*) as count')
-        ->groupBy('payment_method_clean')
-        ->get();
-
         // 5. TRANSAKSI TERBARU
         $recentSales = \App\Models\Order::whereHas('event', function($query) use ($user) {
             $query->where('organizer_id', $user->id);
-        })->with(['user', 'event'])->latest()->take(5)->get();
-        
+        })
+        ->with(['user', 'event'])
+        ->latest()
+        ->take(5)
+        ->get();
+
         return view('organizer.dashboard', compact(
             'totalEvents', 
             'totalSalesCount', 
@@ -81,7 +82,7 @@ class OrganizerController extends Controller
             'recentSales',
             'salesTrend',
             'eventPerformance',
-            'paymentDistribution'
+            'paymentStats'
         ));
     }
 
@@ -107,15 +108,27 @@ class OrganizerController extends Controller
             }], 'total_price')
             ->get();
 
-        $paymentDistribution = \App\Models\Order::whereHas('event', function($query) use ($user) {
-            $query->where('organizer_id', $user->id);
-        })
-        ->where('status', 'paid')
-        ->selectRaw('payment_method, COUNT(*) as count')
-        ->groupBy('payment_method')
-        ->get();
+        // 1. TREN PENJUALAN (Semua Data)
+        $salesTrend = \App\Models\Order::query()
+            ->join('events', 'orders.event_id', '=', 'events.id')
+            ->where('events.organizer_id', $user->id)
+            ->where('orders.status', 'paid')
+            ->selectRaw('DATE(orders.created_at) as date_label, SUM(orders.total_price) as total_revenue')
+            ->groupBy('date_label')
+            ->orderBy('date_label', 'ASC')
+            ->get();
 
-        return view('organizer.reports', compact('totalEvents', 'totalRevenue', 'eventPerformance', 'salesTrend', 'paymentDistribution'));
+        // 2. STATISTIK METODE PEMBAYARAN
+        $paymentStats = \App\Models\Order::query()
+            ->join('events', 'orders.event_id', '=', 'events.id')
+            ->where('events.organizer_id', $user->id)
+            ->where('orders.status', 'paid')
+            ->selectRaw('orders.payment_method, COUNT(*) as count')
+            ->groupBy('orders.payment_method')
+            ->get()
+            ->pluck('count', 'payment_method');
+
+        return view('organizer.reports', compact('totalEvents', 'totalRevenue', 'eventPerformance', 'salesTrend', 'paymentStats'));
     }
 
     /**

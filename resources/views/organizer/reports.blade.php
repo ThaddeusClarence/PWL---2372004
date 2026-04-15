@@ -48,26 +48,27 @@
                 </div>
             </div>
 
+
             {{-- Visual Analytics Section --}}
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-10">
                 {{-- Sales Graph --}}
-                <div class="bg-white p-8 rounded-[40px] shadow-sm border border-gray-100">
+                <div class="bg-white p-10 rounded-[45px] shadow-sm border border-gray-100 flex flex-col">
                     <div class="mb-8">
-                        <h4 class="text-xl font-black text-gray-900">Transaction Trend</h4>
-                        <p class="text-sm text-gray-400 font-medium">Data pendapatan berdasarkan waktu transaksi.</p>
+                        <h4 class="text-xl font-black text-gray-900 italic uppercase tracking-tighter">Transaction Growth</h4>
+                        <p class="text-[10px] text-gray-400 font-bold uppercase tracking-widest">Analisis pertumbuhan pendapatan harian.</p>
                     </div>
-                    <div class="h-[350px]">
+                    <div class="h-[300px] w-full">
                         <canvas id="reportTrendChart"></canvas>
                     </div>
                 </div>
 
-                {{-- Payment Distribution --}}
-                <div class="bg-white p-8 rounded-[40px] shadow-sm border border-gray-100 flex flex-col justify-center">
+                {{-- Payment Methods Summary --}}
+                <div class="bg-white p-10 rounded-[45px] shadow-sm border border-gray-100 flex flex-col">
                     <div class="mb-8">
-                        <h4 class="text-xl font-black text-gray-900 text-center">Metode Pembayaran</h4>
-                        <p class="text-sm text-gray-400 font-medium text-center">Preferensi cara bayar user.</p>
+                        <h4 class="text-xl font-black text-gray-900 italic uppercase tracking-tighter text-center">Payment Methods</h4>
+                        <p class="text-[10px] text-gray-400 font-bold uppercase tracking-widest text-center">Preferensi cara bayar pembeli.</p>
                     </div>
-                    <div class="h-[300px]">
+                    <div class="h-[300px] w-full">
                         <canvas id="reportPaymentChart"></canvas>
                     </div>
                 </div>
@@ -99,25 +100,27 @@
         </div>
     </div>
 
+
     {{-- Script for Charts --}}
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             // Trend Chart
             const ctxTrend = document.getElementById('reportTrendChart').getContext('2d');
-            const labelsTrend = @json($salesTrend->pluck('date')->map(fn($d) => date('d M', strtotime($d))));
-            const dataTrend = @json($salesTrend->pluck('total'));
+            const labelsTrend = @json($salesTrend->pluck('date_label')->map(fn($d) => date('d M', strtotime($d))));
+            const dataTrend = @json($salesTrend->pluck('total_revenue'));
 
             new Chart(ctxTrend, {
-                type: 'bar',
+                type: 'line',
                 data: {
                     labels: labelsTrend.length > 0 ? labelsTrend : ['No Data'],
                     datasets: [{
                         label: 'Gross Revenue',
                         data: dataTrend.length > 0 ? dataTrend : [0],
-                        backgroundColor: '#4f46e5',
-                        borderRadius: 12,
-                        barThickness: 25
+                        borderColor: '#4f46e5',
+                        borderWidth: 4,
+                        fill: false,
+                        tension: 0.4
                     }]
                 },
                 options: {
@@ -128,34 +131,44 @@
                         y: { 
                             beginAtZero: true, 
                             grid: { borderDash: [5, 5] },
-                            ticks: { callback: (v) => 'Rp ' + v.toLocaleString() }
+                            ticks: { callback: (v) => 'Rp ' + v.toLocaleString(), font: { family: 'Plus Jakarta Sans', weight: 'bold' } }
                         },
-                        x: { grid: { display: false } }
+                        x: { grid: { display: false }, ticks: { font: { family: 'Plus Jakarta Sans', weight: 'bold' } } }
                     }
                 }
             });
 
-            // Payment Distribution Chart
+            // Payment Distribution Bar Chart (Match Dashboard Style)
             const ctxPayment = document.getElementById('reportPaymentChart').getContext('2d');
-            const paymentLabels = @json($paymentDistribution->pluck('payment_method'));
-            const paymentData = @json($paymentDistribution->pluck('count'));
+            const paymentRawData = @json($paymentStats);
+            const targetMethods = ['BCA', 'BNI', 'BRI', 'DANA', 'GoPay'];
+            
+            const pLabels = targetMethods;
+            const pValues = targetMethods.map(m => paymentRawData[m] || 0);
 
             new Chart(ctxPayment, {
-                type: 'doughnut',
+                type: 'bar',
                 data: {
-                    labels: paymentLabels.length > 0 ? paymentLabels : ['No Data'],
+                    labels: pLabels,
                     datasets: [{
-                        data: paymentData.length > 0 ? paymentData : [1],
-                        backgroundColor: ['#4f46e5', '#34d399', '#fbbf24', '#f87171', '#818cf8', '#f472b6'],
-                        borderWidth: 0,
+                        data: pValues,
+                        backgroundColor: [
+                            'rgba(79, 70, 229, 0.8)', // BCA
+                            'rgba(16, 185, 129, 0.8)', // BNI
+                            'rgba(59, 130, 246, 0.8)', // BRI
+                            'rgba(245, 158, 11, 0.8)', // DANA
+                            'rgba(239, 68, 68, 0.8)'   // GoPay
+                        ],
+                        borderRadius: 12
                     }]
                 },
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
-                    cutout: '65%',
-                    plugins: {
-                        legend: { position: 'bottom', labels: { usePointStyle: true, padding: 15, font: { weight: 'bold' } } }
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        y: { beginAtZero: true, grid: { display: false }, ticks: { stepSize: 1, font: { family: 'Plus Jakarta Sans', weight: 'bold' } } },
+                        x: { grid: { display: false }, ticks: { font: { family: 'Plus Jakarta Sans', weight: 'bold' } } }
                     }
                 }
             });

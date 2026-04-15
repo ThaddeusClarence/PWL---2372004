@@ -34,13 +34,14 @@ class EventController extends Controller
             'location' => 'required|string',
             'date' => 'required|date',
             'start_time' => 'required',
+            'end_time' => 'required',
             'ticket_names' => 'required|array',
             'ticket_prices' => 'required|array',
             'ticket_quotas' => 'required|array',
             'organizer_id' => 'nullable|exists:users,id',
         ]);
 
-        $data = $request->only(['title', 'description', 'category_id', 'location', 'date', 'start_time', 'organizer_id']);
+        $data = $request->only(['title', 'description', 'category_id', 'location', 'date', 'start_time', 'end_time', 'organizer_id']);
         $data['user_id'] = Auth::id();
         
         // Simpan juga string kategori lama agar tidak error di bagian lain yang masih pakai string
@@ -85,6 +86,7 @@ class EventController extends Controller
             'location' => 'required|string',
             'date' => 'required|date',
             'start_time' => 'required',
+            'end_time' => 'required',
             'ticket_ids' => 'required|array',
             'ticket_names' => 'required|array',
             'ticket_prices' => 'required|array',
@@ -92,7 +94,7 @@ class EventController extends Controller
             'organizer_id' => 'nullable|exists:users,id',
         ]);
 
-        $data = $request->only(['title', 'category_id', 'location', 'date', 'start_time', 'organizer_id']);
+        $data = $request->only(['title', 'category_id', 'location', 'date', 'start_time', 'end_time', 'organizer_id']);
         
         // Update string kategori lama
         $category = \App\Models\Category::find($request->category_id);
