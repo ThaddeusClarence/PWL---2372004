@@ -46,8 +46,57 @@
                     <div class="space-y-4">
                         <form action="{{ route('checkout.pay-success', $order->id) }}" method="POST">
                             @csrf
+                            
+                            {{-- Payment Method Selection --}}
+                            <div class="mb-8 text-left">
+                                <label class="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-3 block">Pilih Metode Pembayaran</label>
+                                <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+                                    <label class="cursor-pointer group">
+                                        <input type="radio" name="payment_method" value="BCA" class="hidden peer" required checked>
+                                        <div class="py-4 border-2 border-gray-100 rounded-2xl peer-checked:border-indigo-600 peer-checked:bg-indigo-50 transition-all text-center">
+                                            <span class="font-black text-sm text-gray-400 group-hover:text-gray-900 transition peer-checked:text-indigo-600">BCA</span>
+                                        </div>
+                                    </label>
+                                    <label class="cursor-pointer group">
+                                        <input type="radio" name="payment_method" value="BNI" class="hidden peer">
+                                        <div class="py-4 border-2 border-gray-100 rounded-2xl peer-checked:border-indigo-600 peer-checked:bg-indigo-50 transition-all text-center">
+                                            <span class="font-black text-sm text-gray-400 group-hover:text-gray-900 transition peer-checked:text-indigo-600">BNI</span>
+                                        </div>
+                                    </label>
+                                    <label class="cursor-pointer group">
+                                        <input type="radio" name="payment_method" value="BRI" class="hidden peer">
+                                        <div class="py-4 border-2 border-gray-100 rounded-2xl peer-checked:border-indigo-600 peer-checked:bg-indigo-50 transition-all text-center">
+                                            <span class="font-black text-sm text-gray-400 group-hover:text-gray-900 transition peer-checked:text-indigo-600">BRI</span>
+                                        </div>
+                                    </label>
+                                    <label class="cursor-pointer group">
+                                        <input type="radio" name="payment_method" value="DANA" class="hidden peer">
+                                        <div class="py-4 border-2 border-gray-100 rounded-2xl peer-checked:border-sky-500 peer-checked:bg-sky-50 transition-all text-center">
+                                            <span class="font-black text-sm text-gray-400 group-hover:text-gray-900 transition peer-checked:text-sky-600">DANA</span>
+                                        </div>
+                                    </label>
+                                    <label class="cursor-pointer group">
+                                        <input type="radio" name="payment_method" value="GoPay" class="hidden peer">
+                                        <div class="py-4 border-2 border-gray-100 rounded-2xl peer-checked:border-emerald-500 peer-checked:bg-emerald-50 transition-all text-center">
+                                            <span class="font-black text-sm text-gray-400 group-hover:text-gray-900 transition peer-checked:text-emerald-600">GoPay</span>
+                                        </div>
+                                    </label>
+                                </div>
+                            </div>
+
+                            {{-- PIN Simulation --}}
+                            <div class="mb-10 text-left">
+                                <label class="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-3 block">Masukkan PIN Kartu (Simulasi)</label>
+                                <div class="flex gap-2">
+                                    <input type="password" maxlength="6" pattern="\d{6}" required
+                                           class="w-full py-5 px-6 bg-gray-50 border-2 border-transparent focus:border-indigo-600 focus:bg-white focus:ring-0 rounded-2xl text-center text-2xl font-black tracking-[1em] text-gray-900 transition-all"
+                                           placeholder="••••••">
+                                </div>
+                                <p class="mt-3 text-[10px] text-gray-400 font-bold uppercase italic">* Masukkan 6 angka sembarang untuk simulasi</p>
+                            </div>
+
                             <button type="submit" class="w-full py-6 bg-indigo-600 text-white rounded-[24px] font-black text-xs uppercase tracking-[0.2em] shadow-[0_20px_40px_-10px_rgba(79,70,229,0.4)] hover:bg-black transition-all active:scale-95 flex items-center justify-center gap-3">
-                                <span>Bayar via Virtual Account</span>
+                                <span>Konfirmasi Bayar</span>
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>
                             </button>
                         </form>

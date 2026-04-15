@@ -68,7 +68,10 @@ class CheckoutController extends Controller
 
         DB::beginTransaction();
         try {
-            $order->update(['status' => 'paid']);
+            $order->update([
+                'status' => 'paid',
+                'payment_method' => $request->payment_method ?? 'Unknown',
+            ]);
 
             $ticketTypeId = session('pending_ticket_type_id');
             $ticketType = TicketType::findOrFail($ticketTypeId);

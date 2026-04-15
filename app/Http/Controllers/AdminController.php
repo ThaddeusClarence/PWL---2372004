@@ -109,6 +109,46 @@ class AdminController extends Controller
         return redirect()->route('admin.organizers.index')->with('success', 'Akun Organizer berhasil dihapus!');
     }
 
+    public function organizerEdit($id)
+    {
+        $organizer = User::findOrFail($id);
+        
+        if ($organizer->role !== 'organizer') {
+            return redirect()->route('admin.organizers.index')->with('error', 'Pengguna bukan seorang organizer.');
+        }
+
+        return view('admin.organizers.edit', compact('organizer'));
+    }
+
+    public function organizerUpdate(Request $request, $id)
+    {
+        $user = User::findOrFail($id);
+        
+        if ($user->role !== 'organizer') {
+            return redirect()->route('admin.organizers.index')->with('error', 'Pengguna bukan seorang organizer.');
+        }
+
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users,email,'.$user->id,
+            'password' => 'nullable|string|min:8|confirmed',
+        ]);
+
+        $data = [
+            'name' => $request->name,
+            'email' => $request->email,
+        ];
+
+        if ($request->filled('password')) {
+            $data['password'] = \Illuminate\Support\Facades\Hash::make($request->password);
+            $data['password_plain'] = $request->password; // Simpan teks asli untuk demo sesuai pola yang ada
+        }
+
+        $user->update($data);
+
+        return redirect()->route('admin.organizers.index')->with('success', 'Akun Organizer berhasil diperbarui!');
+    }
+
     public function organizerShow($id)
     {
         $organizer = User::findOrFail($id);

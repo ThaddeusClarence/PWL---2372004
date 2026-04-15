@@ -61,6 +61,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/admin/organizers/create', [AdminController::class, 'organizerCreate'])->name('admin.organizers.create');
     Route::post('/admin/organizers', [AdminController::class, 'organizerStore'])->name('admin.organizers.store');
     Route::get('/admin/organizers/{user}', [AdminController::class, 'organizerShow'])->name('admin.organizers.show');
+    Route::get('/admin/organizers/{user}/edit', [AdminController::class, 'organizerEdit'])->name('admin.organizers.edit');
+    Route::patch('/admin/organizers/{user}', [AdminController::class, 'organizerUpdate'])->name('admin.organizers.update');
     Route::delete('/admin/organizers/{user}', [AdminController::class, 'organizerDestroy'])->name('admin.organizers.destroy');
 
     // Manajemen Customer

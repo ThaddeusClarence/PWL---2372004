@@ -51,6 +51,10 @@
                         <span>Kode Tiket</span>
                         <span class="text-indigo-600 tracking-tighter">{{ $order->tickets->first()->ticket_code }}</span>
                     </div>
+                    <div class="flex justify-between items-center text-sm font-bold text-gray-500 mb-2">
+                        <span>Metode Bayar</span>
+                        <span class="text-gray-900">{{ $order->payment_method }}</span>
+                    </div>
                     <div class="flex justify-between items-center text-sm font-bold text-gray-500">
                         <span>Total Bayar</span>
                         <span class="text-gray-900 font-extrabold text-lg">Rp {{ number_format($order->total_price, 0, ',', '.') }}</span>

@@ -44,6 +44,7 @@
                                 <td class="px-6 py-4 text-right">
                                     <div class="flex items-center justify-end gap-4">
                                         <a href="{{ route('admin.organizers.show', $org->id) }}" class="text-xs font-black text-indigo-500 hover:text-indigo-700 transition tracking-widest uppercase">Lihat Detail</a>
+                                        <a href="{{ route('admin.organizers.edit', $org->id) }}" class="text-xs font-black text-amber-500 hover:text-amber-700 transition tracking-widest uppercase">Edit</a>
                                         <form action="{{ route('admin.organizers.destroy', $org->id) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus akun organizer ini?');">
                                             @csrf
                                             @method('DELETE')
