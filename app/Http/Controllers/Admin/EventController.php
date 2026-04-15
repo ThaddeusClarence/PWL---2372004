@@ -20,7 +20,8 @@ class EventController extends Controller
     public function create()
     {
         $organizers = User::where('role', 'organizer')->get();
-        return view('admin.events.create', compact('organizers'));
+        $categories = \App\Models\Category::all();
+        return view('admin.events.create', compact('organizers', 'categories'));
     }
 
     public function store(Request $request)
@@ -29,7 +30,7 @@ class EventController extends Controller
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
             'banner' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'category' => 'required|string',
+            'category_id' => 'required|exists:categories,id',
             'location' => 'required|string',
             'date' => 'required|date',
             'start_time' => 'required',
@@ -39,8 +40,12 @@ class EventController extends Controller
             'organizer_id' => 'nullable|exists:users,id',
         ]);
 
-        $data = $request->only(['title', 'description', 'category', 'location', 'date', 'start_time', 'organizer_id']);
+        $data = $request->only(['title', 'description', 'category_id', 'location', 'date', 'start_time', 'organizer_id']);
         $data['user_id'] = Auth::id();
+        
+        // Simpan juga string kategori lama agar tidak error di bagian lain yang masih pakai string
+        $category = \App\Models\Category::find($request->category_id);
+        $data['category'] = $category ? $category->name : 'Lainnya';
 
         // Calculate summary fields
         $data['price'] = min($request->ticket_prices);
@@ -68,14 +73,15 @@ class EventController extends Controller
     public function edit(Event $event)
     {
         $organizers = User::where('role', 'organizer')->get();
-        return view('admin.events.edit', compact('event', 'organizers'));
+        $categories = \App\Models\Category::all();
+        return view('admin.events.edit', compact('event', 'organizers', 'categories'));
     }
 
     public function update(Request $request, Event $event)
     {
         $request->validate([
             'title' => 'required|string|max:255',
-            'category' => 'required|string',
+            'category_id' => 'required|exists:categories,id',
             'location' => 'required|string',
             'date' => 'required|date',
             'start_time' => 'required',
@@ -86,7 +92,11 @@ class EventController extends Controller
             'organizer_id' => 'nullable|exists:users,id',
         ]);
 
-        $data = $request->only(['title', 'category', 'location', 'date', 'start_time', 'organizer_id']);
+        $data = $request->only(['title', 'category_id', 'location', 'date', 'start_time', 'organizer_id']);
+        
+        // Update string kategori lama
+        $category = \App\Models\Category::find($request->category_id);
+        $data['category'] = $category ? $category->name : 'Lainnya';
 
         // Update Ticket Types & Calculate Summary
         $newTotalQuota = array_sum($request->ticket_quotas);

@@ -49,9 +49,9 @@
             </div>
 
             {{-- Visual Analytics Section --}}
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-10">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-10">
                 {{-- Sales Graph --}}
-                <div class="lg:col-span-2 bg-white p-8 rounded-[40px] shadow-sm border border-gray-100">
+                <div class="bg-white p-8 rounded-[40px] shadow-sm border border-gray-100">
                     <div class="mb-8">
                         <h4 class="text-xl font-black text-gray-900">Transaction Trend</h4>
                         <p class="text-sm text-gray-400 font-medium">Data pendapatan berdasarkan waktu transaksi.</p>
@@ -61,32 +61,41 @@
                     </div>
                 </div>
 
-                {{-- Event Analytics List --}}
-                <div class="bg-white p-8 rounded-[40px] shadow-sm border border-gray-100">
-                    <h4 class="text-xl font-black text-gray-900 mb-6">Event Performance</h4>
-                    <div class="space-y-4">
-                        @foreach($eventPerformance as $event)
-                        <div class="p-4 bg-gray-50 rounded-2xl border border-gray-100">
-                            <div class="flex justify-between items-start mb-2">
-                                <span class="text-xs font-black text-gray-900 line-clamp-1">{{ $event->title }}</span>
-                                <span class="text-[10px] bg-indigo-600 text-white px-2 py-0.5 rounded-full font-bold uppercase">{{ $event->category }}</span>
-                            </div>
-                            <div class="flex justify-between items-end">
-                                <div>
-                                    <p class="text-[10px] font-bold text-gray-400 uppercase tracking-tighter">Tickets Sold</p>
-                                    <p class="text-sm font-black text-indigo-600">{{ $event->tickets_count }} Unit</p>
-                                </div>
-                                <div class="text-right">
-                                    <p class="text-[10px] font-bold text-gray-400 uppercase tracking-tighter">Sub-Revenue</p>
-                                    <p class="text-sm font-black text-emerald-600">Rp {{ number_format($event->orders_sum_total_price ?? 0, 0, ',', '.') }}</p>
-                                </div>
-                            </div>
-                        </div>
-                        @endforeach
+                {{-- Payment Distribution --}}
+                <div class="bg-white p-8 rounded-[40px] shadow-sm border border-gray-100 flex flex-col justify-center">
+                    <div class="mb-8">
+                        <h4 class="text-xl font-black text-gray-900 text-center">Metode Pembayaran</h4>
+                        <p class="text-sm text-gray-400 font-medium text-center">Preferensi cara bayar user.</p>
+                    </div>
+                    <div class="h-[300px]">
+                        <canvas id="reportPaymentChart"></canvas>
                     </div>
                 </div>
             </div>
 
+            {{-- Event Analytics Full Width --}}
+            <div class="bg-white p-8 rounded-[40px] shadow-sm border border-gray-100 mb-10">
+                <h4 class="text-xl font-black text-gray-900 mb-6 uppercase tracking-widest text-xs italic opacity-50">Per-Event Performance Detail</h4>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    @foreach($eventPerformance as $event)
+                    <div class="p-5 bg-gray-50 rounded-2xl border border-gray-100 hover:border-indigo-100 hover:bg-white transition group">
+                        <div class="flex justify-between items-start mb-4">
+                            <span class="text-xs font-black text-gray-900 line-clamp-1 group-hover:text-indigo-600 transition">{{ $event->title }}</span>
+                        </div>
+                        <div class="space-y-3">
+                            <div class="flex justify-between items-center text-[10px] font-bold">
+                                <span class="text-gray-400 uppercase tracking-tighter">Sold</span>
+                                <span class="text-indigo-600">{{ $event->tickets_count }}</span>
+                            </div>
+                            <div class="flex justify-between items-center text-[10px] font-bold">
+                                <span class="text-gray-400 uppercase tracking-tighter">Gross</span>
+                                <span class="text-emerald-600">Rp {{ number_format($event->orders_sum_total_price ?? 0, 0, ',', '.') }}</span>
+                            </div>
+                        </div>
+                    </div>
+                    @endforeach
+                </div>
+            </div>
         </div>
     </div>
 
@@ -94,21 +103,21 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            const ctx = document.getElementById('reportTrendChart').getContext('2d');
-            
-            const labels = @json($salesTrend->pluck('date'));
-            const data = @json($salesTrend->pluck('total'));
+            // Trend Chart
+            const ctxTrend = document.getElementById('reportTrendChart').getContext('2d');
+            const labelsTrend = @json($salesTrend->pluck('date')->map(fn($d) => date('d M', strtotime($d))));
+            const dataTrend = @json($salesTrend->pluck('total'));
 
-            new Chart(ctx, {
+            new Chart(ctxTrend, {
                 type: 'bar',
                 data: {
-                    labels: labels,
+                    labels: labelsTrend.length > 0 ? labelsTrend : ['No Data'],
                     datasets: [{
                         label: 'Gross Revenue',
-                        data: data,
+                        data: dataTrend.length > 0 ? dataTrend : [0],
                         backgroundColor: '#4f46e5',
-                        borderRadius: 10,
-                        barThickness: 20
+                        borderRadius: 12,
+                        barThickness: 25
                     }]
                 },
                 options: {
@@ -116,8 +125,37 @@
                     maintainAspectRatio: false,
                     plugins: { legend: { display: false } },
                     scales: {
-                        y: { beginAtZero: true, grid: { borderDash: [5, 5] } },
+                        y: { 
+                            beginAtZero: true, 
+                            grid: { borderDash: [5, 5] },
+                            ticks: { callback: (v) => 'Rp ' + v.toLocaleString() }
+                        },
                         x: { grid: { display: false } }
+                    }
+                }
+            });
+
+            // Payment Distribution Chart
+            const ctxPayment = document.getElementById('reportPaymentChart').getContext('2d');
+            const paymentLabels = @json($paymentDistribution->pluck('payment_method'));
+            const paymentData = @json($paymentDistribution->pluck('count'));
+
+            new Chart(ctxPayment, {
+                type: 'doughnut',
+                data: {
+                    labels: paymentLabels.length > 0 ? paymentLabels : ['No Data'],
+                    datasets: [{
+                        data: paymentData.length > 0 ? paymentData : [1],
+                        backgroundColor: ['#4f46e5', '#34d399', '#fbbf24', '#f87171', '#818cf8', '#f472b6'],
+                        borderWidth: 0,
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    cutout: '65%',
+                    plugins: {
+                        legend: { position: 'bottom', labels: { usePointStyle: true, padding: 15, font: { weight: 'bold' } } }
                     }
                 }
             });

@@ -32,13 +32,16 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
                             <label class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-3">Kategori</label>
-                            <select name="category" class="w-full px-6 py-4 bg-gray-50 border-none rounded-2xl text-sm focus:ring-4 focus:ring-indigo-50 transition outline-none font-bold text-gray-700">
-                                <option value="Musik" {{ $event->category == 'Musik' ? 'selected' : '' }}>Musik</option>
-                                <option value="Seminar" {{ $event->category == 'Seminar' ? 'selected' : '' }}>Seminar</option>
-                                <option value="Workshop" {{ $event->category == 'Workshop' ? 'selected' : '' }}>Workshop</option>
-                                <option value="Olahraga" {{ $event->category == 'Olahraga' ? 'selected' : '' }}>Olahraga</option>
-                                <option value="Lainnya" {{ $event->category == 'Lainnya' ? 'selected' : '' }}>Lainnya</option>
+                            <select name="category_id" class="w-full px-6 py-4 bg-gray-50 border-none rounded-2xl text-sm focus:ring-4 focus:ring-indigo-50 transition outline-none font-bold text-gray-700">
+                                @foreach($categories as $category)
+                                    <option value="{{ $category->id }}" {{ (old('category_id', $event->category_id) == $category->id) ? 'selected' : '' }}>
+                                        {{ $category->name }}
+                                    </option>
+                                @endforeach
                             </select>
+                            @error('category_id')
+                                <p class="text-red-500 text-xs font-bold mt-2 italic">{{ $message }}</p>
+                            @enderror
                         </div>
                         <div>
                             <label class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-3" >Lokasi</label>

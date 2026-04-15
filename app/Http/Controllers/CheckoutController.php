@@ -62,7 +62,7 @@ class CheckoutController extends Controller
     /**
      * Langkah 3: Simulasi Sukses (Paid)
      */
-    public function paySuccess(Order $order)
+    public function paySuccess(Request $request, Order $order)
     {
         if ($order->status !== 'pending') return back();
 
@@ -70,14 +70,14 @@ class CheckoutController extends Controller
         try {
             $order->update([
                 'status' => 'paid',
-                'payment_method' => $request->payment_method ?? 'Unknown',
+                'payment_method' => $request->payment_method ?? 'Lainnya',
             ]);
 
             $ticketTypeId = session('pending_ticket_type_id');
             $ticketType = TicketType::findOrFail($ticketTypeId);
 
             // Buat Tiket setelah dibayar
-            Ticket::create([
+            $ticket = Ticket::create([
                 'order_id' => $order->id,
                 'user_id' => Auth::id(),
                 'ticket_type_id' => $ticketTypeId,
@@ -88,11 +88,16 @@ class CheckoutController extends Controller
             // Kurangi kuota
             $ticketType->decrement('remaining_quota');
 
-            // KIRM KE ANTRIAN (QUEUE)
-            SendTicketJob::dispatch($order);
+            // KIRIM E-MAIL LANGSUNG
+            try {
+                Mail::to($order->user->email)->send(new SendTicketMail($order));
+            } catch (\Exception $mailError) {
+                // Log error e-mail tapi lanjutkan proses agar user tetap dapat tiket di aplikasi
+                \Illuminate\Support\Facades\Log::error('Gagal kirim email tiket: ' . $mailError->getMessage());
+            }
 
             DB::commit();
-            return redirect()->route('checkout.success', $order->id)->with('success', 'Pembayaran Berhasil! Tiket diterbitkan.');
+            return redirect()->route('checkout.success', $order->id)->with('success', 'Pembayaran Berhasil! Tiket diterbitkan dan dikirim ke email.');
         } catch (\Exception $e) {
             DB::rollBack();
             return back()->with('error', 'Gagal memproses tiket: ' . $e->getMessage());
@@ -118,5 +123,15 @@ class CheckoutController extends Controller
 
         $order->load(['event', 'tickets.ticketType']);
         return view('checkout.success', compact('order'));
+    }
+
+    public function previewEmail(Order $order)
+    {
+        // Hanya pemilik atau admin yang bisa preview
+        if ($order->user_id !== Auth::id() && Auth::user()->role !== 'admin') {
+            abort(403);
+        }
+
+        return new \App\Mail\SendTicketMail($order);
     }
 }

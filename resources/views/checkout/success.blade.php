@@ -74,10 +74,13 @@
         </div>
 
         <div class="mt-8 flex flex-col gap-4">
-            <a href="{{ route('customer.dashboard') }}" class="w-full bg-white/10 hover:bg-white/20 text-white text-center py-4 rounded-2xl font-black text-sm border border-white/10 transition-all">
-                Kembali ke Dashboard
+            <a href="{{ route('customer.dashboard') }}" class="w-full bg-indigo-500 hover:bg-black text-white text-center py-4 rounded-[24px] font-black text-sm shadow-xl transition-all">
+                Selesai & Dashboard
             </a>
-            <button onclick="window.print()" class="w-full text-indigo-100 text-xs font-extrabold uppercase tracking-widest hover:text-white transition">
+            <a href="{{ route('ticket.preview', $order->id) }}" target="_blank" class="w-full bg-white/10 hover:bg-white/20 text-white text-center py-4 rounded-[24px] font-black text-sm border border-white/10 transition-all">
+                Preview E-Ticket (Email)
+            </a>
+            <button onclick="window.print()" class="w-full text-indigo-100 text-[10px] font-extrabold uppercase tracking-widest hover:text-white transition">
                 Cetak atau Simpan PDF
             </button>
         </div>

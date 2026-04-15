@@ -5,12 +5,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 
-#[Fillable(['title', 'description', 'banner', 'category', 'location', 'date', 'start_time', 'end_time', 'quota', 'price', 'user_id', 'organizer_id'])]
+#[Fillable(['title', 'description', 'banner', 'category', 'category_id', 'location', 'date', 'start_time', 'end_time', 'quota', 'price', 'user_id', 'organizer_id'])]
 class Event extends Model
 {
-    public function user()
+    public function category_rel()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(Category::class, 'category_id');
     }
 
     public function ticketTypes()

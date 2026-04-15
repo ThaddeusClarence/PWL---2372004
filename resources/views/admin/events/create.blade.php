@@ -45,14 +45,16 @@
                     {{-- Detail Event --}}
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
-                            <label class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-3">Kategori</label>
-                            <select name="category" class="w-full px-6 py-4 bg-gray-50 border-none rounded-2xl text-sm focus:ring-4 focus:ring-indigo-50 transition outline-none font-bold text-gray-700">
-                                <option value="Musik">Musik</option>
-                                <option value="Seminar">Seminar</option>
-                                <option value="Workshop">Workshop</option>
-                                <option value="Olahraga">Olahraga</option>
-                                <option value="Lainnya">Lainnya</option>
+                            <label class="text-[10px] font-black text-gray-400 uppercase tracking-widest block mb-4">Kategori</label>
+                            <select name="category_id" class="w-full px-8 py-5 bg-gray-50 border-none rounded-2xl focus:ring-2 focus:ring-indigo-600 text-gray-900 font-bold outline-none transition-all shadow-sm">
+                                <option value="" disabled selected>Pilih Kategori</option>
+                                @foreach($categories as $category)
+                                    <option value="{{ $category->id }}" {{ old('category_id') == $category->id ? 'selected' : '' }}>{{ $category->name }}</option>
+                                @endforeach
                             </select>
+                            @error('category_id')
+                                <p class="text-red-500 text-xs font-bold mt-2 italic">{{ $message }}</p>
+                            @enderror
                         </div>
                         <div>
                             <label class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-3">Lokasi</label>

@@ -56,7 +56,20 @@ class OrganizerController extends Controller
                 ];
             });
 
-        // 4. TRANSAKSI TERBARU
+        // 4. ANALITIK METODE PEMBAYARAN (Pie Chart)
+        $paymentDistribution = \App\Models\Order::whereHas('event', function($query) use ($user) {
+            $query->where('organizer_id', $user->id);
+        })
+        ->where('status', 'paid')
+        ->selectRaw('CASE 
+            WHEN payment_method IS NULL THEN "Lainnya" 
+            WHEN payment_method = "Unknown" THEN "Lainnya" 
+            ELSE payment_method 
+        END as payment_method_clean, COUNT(*) as count')
+        ->groupBy('payment_method_clean')
+        ->get();
+
+        // 5. TRANSAKSI TERBARU
         $recentSales = \App\Models\Order::whereHas('event', function($query) use ($user) {
             $query->where('organizer_id', $user->id);
         })->with(['user', 'event'])->latest()->take(5)->get();
@@ -67,7 +80,8 @@ class OrganizerController extends Controller
             'totalRevenue', 
             'recentSales',
             'salesTrend',
-            'eventPerformance'
+            'eventPerformance',
+            'paymentDistribution'
         ));
     }
 
@@ -93,16 +107,15 @@ class OrganizerController extends Controller
             }], 'total_price')
             ->get();
 
-        $salesTrend = \App\Models\Order::whereHas('event', function($query) use ($user) {
+        $paymentDistribution = \App\Models\Order::whereHas('event', function($query) use ($user) {
             $query->where('organizer_id', $user->id);
         })
         ->where('status', 'paid')
-        ->selectRaw('DATE(created_at) as date, SUM(total_price) as total')
-        ->groupBy('date')
-        ->orderBy('date', 'ASC')
+        ->selectRaw('payment_method, COUNT(*) as count')
+        ->groupBy('payment_method')
         ->get();
 
-        return view('organizer.reports', compact('totalEvents', 'totalRevenue', 'eventPerformance', 'salesTrend'));
+        return view('organizer.reports', compact('totalEvents', 'totalRevenue', 'eventPerformance', 'salesTrend', 'paymentDistribution'));
     }
 
     /**

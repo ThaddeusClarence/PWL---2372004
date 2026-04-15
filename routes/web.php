@@ -41,6 +41,9 @@ Route::middleware(['auth'])->group(function () {
     // Dashboard Admin
     Route::get('/admin/dashboard', [AdminController::class, 'index'])->name('admin.dashboard');
     
+    // Manajemen Kategori
+    Route::resource('admin/categories', \App\Http\Controllers\Admin\CategoryController::class)->names('admin.categories');
+    
     // Manajemen Event (Admin)
     Route::resource('admin/events', EventController::class)->names([
         'index' => 'admin.events.index',
@@ -94,6 +97,7 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/checkout/pay-success/{order}', [\App\Http\Controllers\CheckoutController::class, 'paySuccess'])->name('checkout.pay-success');
     Route::post('/checkout/pay-failed/{order}', [\App\Http\Controllers\CheckoutController::class, 'payFailed'])->name('checkout.pay-failed');
     Route::get('/checkout/success/{order}', [\App\Http\Controllers\CheckoutController::class, 'success'])->name('checkout.success');
+    Route::get('/checkout/ticket-preview/{order}', [\App\Http\Controllers\CheckoutController::class, 'previewEmail'])->name('ticket.preview');
 
     // FITUR EXPORT PDF
     Route::get('/admin/export-pdf', function () {

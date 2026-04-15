@@ -40,9 +40,9 @@
                     </div>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                    @forelse($events as $event)
-                    <div class="group bg-white rounded-[40px] border border-gray-100 shadow-[0_35px_80px_-20px_rgba(0,0,0,0.08)] overflow-hidden hover:shadow-[0_50px_120px_-30px_rgba(79,70,229,0.25)] transition-all duration-500 hover:-translate-y-4">
+                <div id="event-container" class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    @forelse($events as $index => $event)
+                    <div class="event-card group bg-white rounded-[40px] border border-gray-100 shadow-[0_35px_80px_-20px_rgba(0,0,0,0.08)] overflow-hidden hover:shadow-[0_50px_120px_-30px_rgba(79,70,229,0.25)] transition-all duration-500 hover:-translate-y-4 {{ $index >= 3 ? 'hidden' : '' }}">
                         <div class="relative h-56 overflow-hidden">
                             <img src="{{ $event->banner ? asset('storage/' . $event->banner) : 'https://images.unsplash.com/photo-1540575861501-7cf05a4b125a?auto=format&fit=crop&q=80&w=800' }}" 
                                  class="w-full h-full object-cover transition duration-700 group-hover:scale-110">
@@ -76,7 +76,38 @@
                     </div>
                     @endforelse
                 </div>
+
+                @if($events->count() > 3)
+                <div class="flex justify-center mt-12">
+                    <button id="toggle-events-btn" class="px-10 py-4 bg-white border-2 border-indigo-600 text-indigo-600 font-black rounded-[24px] uppercase tracking-widest text-xs hover:bg-indigo-600 hover:text-white transition-all shadow-xl shadow-indigo-100/30">
+                        Tampilkan Semua Event
+                    </button>
+                </div>
+                @endif
             </div>
+
+            <script>
+                document.getElementById('toggle-events-btn')?.addEventListener('click', function() {
+                    const cards = document.querySelectorAll('.event-card');
+                    const isExpanded = this.dataset.expanded === 'true';
+
+                    if (isExpanded) {
+                        // Tutup (Tampilkan hanya 3)
+                        cards.forEach((card, index) => {
+                            if (index >= 3) card.classList.add('hidden');
+                        });
+                        this.innerText = 'Tampilkan Semua Event';
+                        this.dataset.expanded = 'false';
+                        // Scroll up sedikit agar user tidak bingung
+                        document.getElementById('event-container').scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    } else {
+                        // Buka (Tampilkan semua)
+                        cards.forEach(card => card.classList.remove('hidden'));
+                        this.innerText = 'Tutup Daftar Event';
+                        this.dataset.expanded = 'true';
+                    }
+                });
+            </script>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
                 {{-- Tiket Card --}}

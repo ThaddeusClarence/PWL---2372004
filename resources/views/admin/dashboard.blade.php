@@ -91,7 +91,11 @@
                         <h3 class="text-xl font-black mb-6 leading-tight">Control Center ⚡</h3>
                         <div class="space-y-4">
                             <a href="{{ route('scan.view') }}" class="block w-full text-center bg-indigo-600 hover:bg-white hover:text-indigo-600 py-5 rounded-2xl text-xs font-black uppercase tracking-widest transition shadow-lg active:scale-95">Verify Ticket Scan</a>
-                            <a href="{{ route('admin.tickets.index') }}" class="block w-full text-center bg-white/20 border-2 border-indigo-400/50 py-4 rounded-2xl text-xs font-black uppercase tracking-widest transition hover:bg-white/30">🎫 Master Tiket</a>
+                            <a href="{{ route('admin.categories.index') }}" class="block w-full text-center bg-indigo-50 text-indigo-600 border-2 border-indigo-200 py-4 rounded-2xl text-xs font-black uppercase tracking-widest transition hover:bg-indigo-600 hover:text-white group">
+                                <span class="group-hover:hidden">📂 Manajemen Kategori</span>
+                                <span class="hidden group-hover:block">Kelola Group Event</span>
+                            </a>
+                            <a href="{{ route('admin.tickets.index') }}" class="block w-full text-center bg-white/20 border-2 border-indigo-400/50 py-4 rounded-2xl text-xs font-black uppercase tracking-widest transition hover:bg-white/30 text-white">🎫 Master Tiket</a>
                             <a href="{{ route('admin.events.create') }}" class="block w-full text-center bg-white/10 hover:bg-white/20 py-4 rounded-2xl text-xs font-black uppercase tracking-widest transition">Buat Event Baru</a>
                             <a href="{{ route('admin.events.index') }}" class="block w-full text-center bg-white/10 hover:bg-white/20 py-4 rounded-2xl text-xs font-black uppercase tracking-widest transition">Kelola Semua Event</a>
                             <a href="{{ route('admin.organizers.index') }}" class="block w-full text-center bg-white/10 hover:bg-white/20 py-4 rounded-2xl text-xs font-black uppercase tracking-widest transition border-2 border-indigo-500/20">Manajemen Organizer</a>
