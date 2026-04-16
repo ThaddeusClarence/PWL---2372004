@@ -31,7 +31,7 @@ class CustomerController extends Controller
 
         // Ambil Daftar Waiting List Saya
         $waitingLists = WaitingList::where('user_id', $user->id)
-            ->with('event')
+            ->with(['event.ticketTypes'])
             ->latest()
             ->get();
             
@@ -104,5 +104,17 @@ class CustomerController extends Controller
         $ticket->delete();
 
         return back()->with('success', 'Tiket berhasil dibuang.');
+    }
+
+    public function waitingListDestroy(WaitingList $waitingList)
+    {
+        // Pastikan milik user yang login
+        if ($waitingList->user_id !== Auth::id()) {
+            abort(403);
+        }
+
+        $waitingList->delete();
+
+        return back()->with('success', 'Anda telah keluar dari antrean waiting list.');
     }
 }

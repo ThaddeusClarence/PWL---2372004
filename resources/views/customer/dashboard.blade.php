@@ -160,9 +160,32 @@
                                 <p class="text-[10px] font-bold text-amber-600 uppercase tracking-widest">{{ $wl->ticket_type_name }}</p>
                             </div>
                         </div>
-                        <div class="text-right">
-                            <span class="px-3 py-1 bg-amber-50 text-amber-600 rounded-full text-[9px] font-black uppercase tracking-widest border border-amber-100 italic">DALAM ANTREAN</span>
-                            <p class="text-[9px] text-gray-400 font-bold mt-1">{{ $wl->created_at->diffForHumans() }}</p>
+                        <div class="flex items-center gap-3">
+                            <div class="text-right">
+                                <span class="px-3 py-1 bg-amber-50 text-amber-600 rounded-full text-[9px] font-black uppercase tracking-widest border border-amber-100 italic">DALAM ANTREAN</span>
+                                
+                                @php
+                                    $ticketType = $wl->event->ticketTypes->where('name', $wl->ticket_type_name)->first();
+                                    $isAvailable = $ticketType && $ticketType->remaining_quota > 0;
+                                @endphp
+
+                                @if($isAvailable)
+                                    <p class="text-[9px] font-black text-emerald-600 mt-1 uppercase">✅ Tiket Tersedia</p>
+                                @else
+                                    <p class="text-[8px] font-bold text-gray-300 mt-1 uppercase italic">Belum Tersedia</p>
+                                @endif
+
+                                <p class="text-[9px] text-gray-400 font-bold mt-1">{{ $wl->created_at->diffForHumans() }}</p>
+                            </div>
+                            
+                            {{-- Tombol Batalkan Waiting List --}}
+                            <form action="{{ route('customer.waiting-list.destroy', $wl->id) }}" method="POST" onsubmit="return confirm('Keluar dari antrean waiting list?')">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="p-2 bg-red-50 text-red-400 hover:bg-red-500 hover:text-white rounded-xl transition" title="Batalkan Antrean">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                                </button>
+                            </form>
                         </div>
                     </div>
                     @endforeach

@@ -47,9 +47,20 @@
                                     <p class="text-sm font-bold text-gray-700">{{ $list->event->title }}</p>
                                 </td>
                                 <td class="px-10 py-7">
-                                    <span class="px-3 py-1 bg-gray-100 text-gray-600 rounded-lg text-[10px] font-black uppercase tracking-wider">
-                                        {{ $list->ticket_type_name ?? 'Any Category' }}
-                                    </span>
+                                    <div class="flex flex-col gap-1">
+                                        <span class="px-3 py-1 bg-gray-100 text-gray-600 rounded-lg text-[10px] font-black uppercase tracking-wider inline-block w-fit">
+                                            {{ $list->ticket_type_name ?? 'Any Category' }}
+                                        </span>
+                                        @php
+                                            $ticketType = $list->event->ticketTypes->where('name', $list->ticket_type_name)->first();
+                                            $isAvailable = $ticketType && $ticketType->remaining_quota > 0;
+                                        @endphp
+                                        @if($isAvailable)
+                                            <span class="text-[9px] font-black text-emerald-600 uppercase tracking-tighter">✅ Tersedia</span>
+                                        @else
+                                            <span class="text-[9px] font-black text-red-400 uppercase tracking-tighter italic">Masih Habis</span>
+                                        @endif
+                                    </div>
                                 </td>
                                 <td class="px-10 py-7">
                                     <p class="text-sm font-bold text-gray-500">{{ $list->created_at->format('d M Y, H:i') }}</p>

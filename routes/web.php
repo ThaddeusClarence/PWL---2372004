@@ -91,6 +91,7 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('/customer/orders/{order}', [CustomerController::class, 'orderDestroy'])->name('customer.orders.destroy');
     Route::delete('/customer/tickets/{ticket}', [CustomerController::class, 'ticketDestroy'])->name('customer.tickets.destroy');
     Route::post('/events/{event}/waiting-list', [CustomerController::class, 'joinWaitingList'])->name('events.waiting-list');
+    Route::delete('/customer/waiting-list/{waitingList}', [CustomerController::class, 'waitingListDestroy'])->name('customer.waiting-list.destroy');
 
     // FITUR TICKETING (Checkout & Simulasi Pembayaran)
     Route::post('/checkout', [\App\Http\Controllers\CheckoutController::class, 'store'])->name('checkout.store');

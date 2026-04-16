@@ -232,7 +232,7 @@ class AdminController extends Controller
 
     public function waitingListIndex()
     {
-        $waitingLists = \App\Models\WaitingList::with(['user', 'event'])->latest()->get();
+        $waitingLists = \App\Models\WaitingList::with(['user', 'event.ticketTypes'])->latest()->get();
         return view('admin.waiting-list.index', compact('waitingLists'));
     }
 
