@@ -135,15 +135,60 @@
                             </div>
 
                             @auth
-                                <button type="submit" class="w-full bg-indigo-600 hover:bg-white hover:text-indigo-600 text-white py-5 rounded-2xl font-black text-lg transition-all shadow-lg active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed" {{ $event->ticketTypes->where('remaining_quota', '>', 0)->isEmpty() ? 'disabled' : '' }}>
-                                    Beli Tiket Sekarang
-                                </button>
+                                <div class="space-y-3">
+                                    <button type="submit" id="buy-btn" class="w-full bg-indigo-600 hover:bg-white hover:text-indigo-600 text-white py-5 rounded-2xl font-black text-lg transition-all shadow-lg active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed" {{ $event->ticketTypes->where('remaining_quota', '>', 0)->isEmpty() ? 'disabled' : '' }}>
+                                        Beli Tiket Sekarang
+                                    </button>
+                                    
+                                    @if($event->ticketTypes->where('remaining_quota', '<=', 0)->isNotEmpty())
+                                    <button type="button" onclick="document.getElementById('waiting-list-modal').classList.remove('hidden')" class="w-full bg-amber-500 hover:bg-amber-600 text-white py-4 rounded-2xl font-black text-sm transition-all shadow-lg active:scale-95 flex items-center justify-center gap-2">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                        Gabung Waiting List
+                                    </button>
+                                    @endif
+                                </div>
                             @else
                                 <a href="{{ route('login') }}" class="w-full block text-center bg-white/10 hover:bg-white text-white hover:text-gray-900 py-5 rounded-2xl font-black text-lg transition-all border border-white/10">
                                     Login untuk Membeli
                                 </a>
                             @endauth
                         </form>
+
+                        <div id="waiting-list-modal" class="fixed inset-0 z-[100] hidden flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+                            <div class="bg-white rounded-[40px] w-full max-w-lg p-10 relative animate-in fade-in zoom-in duration-300">
+                                <button onclick="document.getElementById('waiting-list-modal').classList.add('hidden')" class="absolute top-6 right-6 text-gray-400 hover:text-black">
+                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                                </button>
+                                
+                                <div class="text-center mb-8">
+                                    <div class="w-20 h-20 bg-amber-50 rounded-full flex items-center justify-center text-amber-500 mx-auto mb-6">
+                                        <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                    </div>
+                                    <h3 class="text-2xl font-black text-gray-900">Waiting List</h3>
+                                    <p class="text-gray-500 font-medium mt-2">Tiket impian Anda habis? Bergabunglah dengan antrean kami.</p>
+                                </div>
+
+                                <form action="{{ route('events.waiting-list', $event->id) }}" method="POST" class="space-y-6">
+                                    @csrf
+                                    <div>
+                                        <label class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-3">Pilih Tipe Tiket</label>
+                                        <select name="ticket_type_name" required class="w-full px-6 py-4 bg-gray-50 border-none rounded-2xl text-sm font-bold text-gray-700 focus:ring-4 focus:ring-amber-50 outline-none transition">
+                                            @foreach($event->ticketTypes->where('remaining_quota', '<=', 0) as $type)
+                                                <option value="{{ $type->name }}">{{ $type->name }} (Habis)</option>
+                                            @endforeach
+                                            @foreach($event->ticketTypes->where('remaining_quota', '>', 0) as $type)
+                                                <option value="{{ $type->name }}">{{ $type->name }} (Masih Tersedia)</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                    
+                                    <button type="submit" class="w-full py-5 bg-amber-500 text-white font-black rounded-3xl hover:bg-black transition shadow-xl shadow-amber-100 text-sm uppercase tracking-widest">
+                                        MASUKKAN SAYA KE DAFTAR
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+
 
                         <div class="mt-6 flex items-center gap-3 text-xs font-bold text-gray-400 justify-center">
                             <svg class="w-4 h-4 text-emerald-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M2.166 4.9L10 1.554 17.834 4.9c.42.18.736.56.884 1.01.148.45.158.913.028 1.363l-1.352 4.673c-.234.808-.574 1.57-1.013 2.277a11.14 11.14 0 01-1.636 2.052 11.233 11.233 0 01-2.052 1.636 10.974 10.974 0 01-2.277 1.013L10 19.34a.75.75 0 01-.5 0L8.604 18.92a10.978 10.978 0 01-2.277-1.013 11.233 11.233 0 01-2.052 1.636 10.974 10.974 0 01-2.277 1.013Z" clip-rule="evenodd" /></svg>

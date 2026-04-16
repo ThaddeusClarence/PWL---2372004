@@ -27,11 +27,18 @@
                         <div>
                             <label class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-3">Judul Event</label>
                             <input type="text" name="title" required placeholder="Contoh: Konser Musik Harmoni" 
+                                   value="{{ old('title') }}"
                                    class="w-full px-6 py-4 bg-gray-50 border-none rounded-2xl text-sm focus:ring-4 focus:ring-indigo-50 transition outline-none font-bold text-gray-700">
+                            @error('title')
+                                <p class="text-red-500 text-[10px] font-bold mt-2">{{ $message }}</p>
+                            @enderror
                         </div>
                         <div>
                             <label class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-3">Banner Event</label>
                             <input type="file" name="banner" class="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-bold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100 transition cursor-pointer">
+                            @error('banner')
+                                <p class="text-red-500 text-[10px] font-bold mt-2">{{ $message }}</p>
+                            @enderror
                         </div>
                     </div>
 
@@ -39,7 +46,10 @@
                     <div>
                         <label class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-3">Deskripsi Event</label>
                         <textarea name="description" rows="4" placeholder="Ceritakan detail event Anda..." 
-                                  class="w-full px-6 py-4 bg-gray-50 border-none rounded-2xl text-sm focus:ring-4 focus:ring-indigo-50 transition outline-none font-medium text-gray-700"></textarea>
+                                  class="w-full px-6 py-4 bg-gray-50 border-none rounded-2xl text-sm focus:ring-4 focus:ring-indigo-50 transition outline-none font-medium text-gray-700">{{ old('description') }}</textarea>
+                        @error('description')
+                            <p class="text-red-500 text-[10px] font-bold mt-2">{{ $message }}</p>
+                        @enderror
                     </div>
 
                     {{-- Detail Event --}}
@@ -53,28 +63,42 @@
                                 @endforeach
                             </select>
                             @error('category_id')
-                                <p class="text-red-500 text-xs font-bold mt-2 italic">{{ $message }}</p>
+                                <p class="text-red-500 text-[10px] font-bold mt-2">{{ $message }}</p>
                             @enderror
                         </div>
                         <div>
                             <label class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-3">Lokasi</label>
                             <input type="text" name="location" required placeholder="Contoh: Convention Center LT 3" 
+                                   value="{{ old('location') }}"
                                    class="w-full px-6 py-4 bg-gray-50 border-none rounded-2xl text-sm focus:ring-4 focus:ring-indigo-50 transition outline-none font-bold text-gray-700">
+                            @error('location')
+                                <p class="text-red-500 text-[10px] font-bold mt-2">{{ $message }}</p>
+                            @enderror
                         </div>
                         <div>
                             <label class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-3">Tanggal Event</label>
                             <input type="date" name="date" required 
+                                   value="{{ old('date') }}"
                                    class="w-full px-6 py-4 bg-gray-50 border-none rounded-2xl text-sm focus:ring-4 focus:ring-indigo-50 transition outline-none font-bold text-gray-700">
+                            @error('date')
+                                <p class="text-red-500 text-[10px] font-bold mt-2">{{ $message }}</p>
+                            @enderror
                         </div>
                         <div>
                             <label class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-3">Jam Mulai</label>
                             <input type="time" name="start_time" required 
                                    class="w-full px-6 py-4 bg-gray-50 border-none rounded-2xl text-sm focus:ring-4 focus:ring-indigo-50 transition outline-none font-bold text-gray-700" value="{{ old('start_time') }}">
+                            @error('start_time')
+                                <p class="text-red-500 text-[10px] font-bold mt-2">{{ $message }}</p>
+                            @enderror
                         </div>
                         <div>
                             <label class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-3">Jam Selesai</label>
                             <input type="time" name="end_time" required 
                                    class="w-full px-6 py-4 bg-gray-50 border-none rounded-2xl text-sm focus:ring-4 focus:ring-indigo-50 transition outline-none font-bold text-gray-700" value="{{ old('end_time') }}">
+                            @error('end_time')
+                                <p class="text-red-500 text-[10px] font-bold mt-2">{{ $message }}</p>
+                            @enderror
                         </div>
                         <div class="md:col-span-2 bg-indigo-50/50 p-6 rounded-3xl border border-indigo-100/50">
                             <label class="block text-xs font-black text-indigo-600 uppercase tracking-widest mb-3 flex items-center gap-2">
@@ -84,7 +108,7 @@
                             <select name="organizer_id" class="w-full px-6 py-4 bg-white border border-indigo-100 rounded-2xl text-sm focus:ring-4 focus:ring-indigo-50 transition outline-none font-bold text-gray-700">
                                 <option value="">-- Tetapkan Organizer untuk Monitoring --</option>
                                 @foreach($organizers as $organizer)
-                                    <option value="{{ $organizer->id }}">{{ $organizer->name }} ({{ $organizer->email }})</option>
+                                    <option value="{{ $organizer->id }}" {{ old('organizer_id') == $organizer->id ? 'selected' : '' }}>{{ $organizer->name }} ({{ $organizer->email }})</option>
                                 @endforeach
                             </select>
                             <p class="text-[10px] text-indigo-400 font-bold mt-3 italic">* Organizer yang dipilih dapat memantau penjualan & analitik melalui dashboard mereka.</p>
@@ -105,23 +129,50 @@
                         </div>
                         
                         <div id="ticket-types-container" class="space-y-4">
-                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 p-6 bg-gray-50 rounded-3xl relative">
-                                <div>
-                                    <label class="block text-[10px] font-black text-gray-400 uppercase mb-2">Nama Tiket</label>
-                                    <input type="text" name="ticket_names[]" required placeholder="Reguler" 
-                                           class="w-full px-5 py-3 bg-white border-none rounded-xl text-xs focus:ring-2 focus:ring-indigo-500 transition outline-none font-bold text-gray-700 shadow-sm">
+                            @if(old('ticket_names'))
+                                @foreach(old('ticket_names') as $index => $name)
+                                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 p-6 bg-gray-50 rounded-3xl relative">
+                                    <div>
+                                        <label class="block text-[10px] font-black text-gray-400 uppercase mb-2">Nama Tiket</label>
+                                        <input type="text" name="ticket_names[]" value="{{ $name }}" required
+                                               class="w-full px-5 py-3 bg-white border-none rounded-xl text-xs focus:ring-2 focus:ring-indigo-500 transition outline-none font-bold text-gray-700 shadow-sm">
+                                    </div>
+                                    <div>
+                                        <label class="block text-[10px] font-black text-gray-400 uppercase mb-2">Harga (Rp)</label>
+                                        <input type="number" name="ticket_prices[]" value="{{ old('ticket_prices')[$index] }}" required 
+                                               class="w-full px-5 py-3 bg-white border-none rounded-xl text-xs focus:ring-2 focus:ring-indigo-500 transition outline-none font-bold text-gray-700 shadow-sm">
+                                    </div>
+                                    <div>
+                                        <label class="block text-[10px] font-black text-gray-400 uppercase mb-2">Kuota</label>
+                                        <input type="number" name="ticket_quotas[]" value="{{ old('ticket_quotas')[$index] }}" required 
+                                               class="w-full px-5 py-3 bg-white border-none rounded-xl text-xs focus:ring-2 focus:ring-indigo-500 transition outline-none font-bold text-gray-700 shadow-sm">
+                                    </div>
+                                    @if($index > 0)
+                                    <button type="button" onclick="this.parentElement.remove()" class="absolute -top-1 -right-1 w-6 h-6 bg-red-50 text-red-500 rounded-full flex items-center justify-center hover:bg-red-500 hover:text-white transition shadow-sm border border-red-100">
+                                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M6 18L18 6M6 6l12 12"></path></svg>
+                                    </button>
+                                    @endif
                                 </div>
-                                <div>
-                                    <label class="block text-[10px] font-black text-gray-400 uppercase mb-2">Harga (Rp)</label>
-                                    <input type="number" name="ticket_prices[]" required placeholder="0" 
-                                           class="w-full px-5 py-3 bg-white border-none rounded-xl text-xs focus:ring-2 focus:ring-indigo-500 transition outline-none font-bold text-gray-700 shadow-sm">
+                                @endforeach
+                            @else
+                                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 p-6 bg-gray-50 rounded-3xl relative">
+                                    <div>
+                                        <label class="block text-[10px] font-black text-gray-400 uppercase mb-2">Nama Tiket</label>
+                                        <input type="text" name="ticket_names[]" required placeholder="Reguler" 
+                                               class="w-full px-5 py-3 bg-white border-none rounded-xl text-xs focus:ring-2 focus:ring-indigo-500 transition outline-none font-bold text-gray-700 shadow-sm">
+                                    </div>
+                                    <div>
+                                        <label class="block text-[10px] font-black text-gray-400 uppercase mb-2">Harga (Rp)</label>
+                                        <input type="number" name="ticket_prices[]" required placeholder="0" 
+                                               class="w-full px-5 py-3 bg-white border-none rounded-xl text-xs focus:ring-2 focus:ring-indigo-500 transition outline-none font-bold text-gray-700 shadow-sm">
+                                    </div>
+                                    <div>
+                                        <label class="block text-[10px] font-black text-gray-400 uppercase mb-2">Kuota</label>
+                                        <input type="number" name="ticket_quotas[]" required placeholder="100" 
+                                               class="w-full px-5 py-3 bg-white border-none rounded-xl text-xs focus:ring-2 focus:ring-indigo-500 transition outline-none font-bold text-gray-700 shadow-sm">
+                                    </div>
                                 </div>
-                                <div>
-                                    <label class="block text-[10px] font-black text-gray-400 uppercase mb-2">Kuota</label>
-                                    <input type="number" name="ticket_quotas[]" required placeholder="100" 
-                                           class="w-full px-5 py-3 bg-white border-none rounded-xl text-xs focus:ring-2 focus:ring-indigo-500 transition outline-none font-bold text-gray-700 shadow-sm">
-                                </div>
-                            </div>
+                            @endif
                         </div>
                     </div>
 

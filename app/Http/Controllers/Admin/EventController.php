@@ -29,15 +29,18 @@ class EventController extends Controller
         $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
-            'banner' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'banner' => 'nullable|file', // Diperbolehkan file apa saja tanpa batas ukuran (tergantung limit server)
             'category_id' => 'required|exists:categories,id',
             'location' => 'required|string',
             'date' => 'required|date',
             'start_time' => 'required',
             'end_time' => 'required',
-            'ticket_names' => 'required|array',
-            'ticket_prices' => 'required|array',
-            'ticket_quotas' => 'required|array',
+            'ticket_names' => 'required|array|min:1',
+            'ticket_names.*' => 'required|string',
+            'ticket_prices' => 'required|array|min:1',
+            'ticket_prices.*' => 'required|numeric|min:0',
+            'ticket_quotas' => 'required|array|min:1',
+            'ticket_quotas.*' => 'required|integer|min:0',
             'organizer_id' => 'nullable|exists:users,id',
         ]);
 
@@ -49,8 +52,8 @@ class EventController extends Controller
         $data['category'] = $category ? $category->name : 'Lainnya';
 
         // Calculate summary fields
-        $data['price'] = min($request->ticket_prices);
-        $data['quota'] = array_sum($request->ticket_quotas);
+        $data['price'] = count($request->ticket_prices) > 0 ? min($request->ticket_prices) : 0;
+        $data['quota'] = count($request->ticket_quotas) > 0 ? array_sum($request->ticket_quotas) : 0;
 
         if ($request->hasFile('banner')) {
             $data['banner'] = $request->file('banner')->store('events/banners', 'public');
@@ -82,19 +85,24 @@ class EventController extends Controller
     {
         $request->validate([
             'title' => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'banner' => 'nullable|file', // Diperbolehkan file apa saja tanpa batas ukuran
             'category_id' => 'required|exists:categories,id',
             'location' => 'required|string',
             'date' => 'required|date',
             'start_time' => 'required',
             'end_time' => 'required',
-            'ticket_ids' => 'required|array',
-            'ticket_names' => 'required|array',
-            'ticket_prices' => 'required|array',
-            'ticket_quotas' => 'required|array',
+            'ticket_ids' => 'nullable|array',
+            'ticket_names' => 'required|array|min:1',
+            'ticket_names.*' => 'required|string',
+            'ticket_prices' => 'required|array|min:1',
+            'ticket_prices.*' => 'required|numeric|min:0',
+            'ticket_quotas' => 'required|array|min:1',
+            'ticket_quotas.*' => 'required|integer|min:0',
             'organizer_id' => 'nullable|exists:users,id',
         ]);
 
-        $data = $request->only(['title', 'category_id', 'location', 'date', 'start_time', 'end_time', 'organizer_id']);
+        $data = $request->only(['title', 'description', 'category_id', 'location', 'date', 'start_time', 'end_time', 'organizer_id']);
         
         // Update string kategori lama
         $category = \App\Models\Category::find($request->category_id);
@@ -117,20 +125,36 @@ class EventController extends Controller
         // 1. Update Tabel Event
         $event->update($data);
 
-        // 2. Update Masing-masing Kategori Tiket
-        foreach ($request->ticket_ids as $index => $id) {
-            $ticketType = \App\Models\TicketType::findOrFail($id);
+        // 2. Sync Ticket Types
+        // Delete tickets that are NOT in the submitted ticket_ids
+        $submittedIds = $request->ticket_ids ?? [];
+        $event->ticketTypes()->whereNotIn('id', $submittedIds)->delete();
+
+        // Update or Create ticket types
+        foreach ($request->ticket_names as $index => $name) {
+            $id = $request->ticket_ids[$index] ?? null;
             
-            // Logika penyesuaian remaining_quota
-            // Jika kuota ditambah 10, maka sisa tiket juga ditambah 10
-            $diff = $request->ticket_quotas[$index] - $ticketType->quota;
-            
-            $ticketType->update([
-                'name' => $request->ticket_names[$index],
-                'price' => $request->ticket_prices[$index],
-                'quota' => $request->ticket_quotas[$index],
-                'remaining_quota' => $ticketType->remaining_quota + $diff,
-            ]);
+            if ($id) {
+                $ticketType = \App\Models\TicketType::findOrFail($id);
+                
+                // Logika penyesuaian remaining_quota
+                $diff = $request->ticket_quotas[$index] - $ticketType->quota;
+                
+                $ticketType->update([
+                    'name' => $name,
+                    'price' => $request->ticket_prices[$index],
+                    'quota' => $request->ticket_quotas[$index],
+                    'remaining_quota' => max(0, $ticketType->remaining_quota + $diff),
+                ]);
+            } else {
+                // New Ticket Type added during edit
+                $event->ticketTypes()->create([
+                    'name' => $name,
+                    'price' => $request->ticket_prices[$index],
+                    'quota' => $request->ticket_quotas[$index],
+                    'remaining_quota' => $request->ticket_quotas[$index],
+                ]);
+            }
         }
 
         return redirect()->route('admin.events.index')->with('success', 'Event dan Kategori Tiket berhasil diperbarui!');

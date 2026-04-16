@@ -86,6 +86,7 @@ Route::middleware(['auth'])->group(function () {
 
     // Dashboard Customer
     Route::get('/customer/dashboard', [CustomerController::class, 'index'])->name('customer.dashboard');
+    Route::get('/customer/events/all', [CustomerController::class, 'allEvents'])->name('customer.events.all');
     Route::get('/customer/ticket/{order}', [CustomerController::class, 'showTicket'])->name('customer.ticket.show');
     Route::delete('/customer/orders/{order}', [CustomerController::class, 'orderDestroy'])->name('customer.orders.destroy');
     Route::delete('/customer/tickets/{ticket}', [CustomerController::class, 'ticketDestroy'])->name('customer.tickets.destroy');
@@ -93,6 +94,7 @@ Route::middleware(['auth'])->group(function () {
 
     // FITUR TICKETING (Checkout & Simulasi Pembayaran)
     Route::post('/checkout', [\App\Http\Controllers\CheckoutController::class, 'store'])->name('checkout.store');
+    Route::get('/checkout/queue/{order}', [\App\Http\Controllers\CheckoutController::class, 'queue'])->name('checkout.queue');
     Route::get('/checkout/payment/{order}', [\App\Http\Controllers\CheckoutController::class, 'payment'])->name('checkout.payment');
     Route::post('/checkout/pay-success/{order}', [\App\Http\Controllers\CheckoutController::class, 'paySuccess'])->name('checkout.pay-success');
     Route::post('/checkout/pay-failed/{order}', [\App\Http\Controllers\CheckoutController::class, 'payFailed'])->name('checkout.pay-failed');

@@ -80,26 +80,6 @@
                 </div>
             </div>
 
-            {{-- Technical Info Card (Queue) --}}
-            <div class="bg-indigo-900 rounded-[40px] p-10 text-white relative overflow-hidden">
-                <div class="relative z-10 grid md:grid-cols-2 gap-10 items-center">
-                    <div>
-                        <h3 class="text-2xl font-black mb-4">Status Laravel Queue ⚡</h3>
-                        <p class="text-indigo-200 text-sm font-medium leading-relaxed">Sistem antrean background sedang berjalan secara otomatis. Semua tugas pengiriman email tiket dan pemrosesan data berat dilakukan oleh sistem tanpa mengganggu kenyamanan pengguna.</p>
-                    </div>
-                    <div class="flex gap-4">
-                        <div class="flex-1 bg-white/10 p-6 rounded-3xl border border-white/10 text-center">
-                            <p class="text-[10px] font-black uppercase tracking-widest text-indigo-300 mb-2">Driver Antrean</p>
-                            <p class="text-2xl font-black">Database</p>
-                        </div>
-                        <div class="flex-1 bg-white/10 p-6 rounded-3xl border border-white/10 text-center">
-                            <p class="text-[10px] font-black uppercase tracking-widest text-indigo-300 mb-2">Status Pekerjaan</p>
-                            <p class="text-2xl font-black">Optimized</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="absolute -right-20 -bottom-20 w-80 h-80 bg-white/5 rounded-full blur-3xl"></div>
-            </div>
 
         </div>
     </div>

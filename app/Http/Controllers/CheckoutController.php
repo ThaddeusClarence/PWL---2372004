@@ -44,7 +44,19 @@ class CheckoutController extends Controller
         // Simpan ticket_type_id di session sementara untuk proses pembayaran
         session(['pending_ticket_type_id' => $ticketType->id]);
 
-        return redirect()->route('checkout.payment', $order->id);
+        return redirect()->route('checkout.queue', $order->id);
+    }
+
+    /**
+     * Langkah 1.5: Halaman Simulasi Antrean (Queue)
+     */
+    public function queue(Order $order)
+    {
+        if ($order->user_id !== Auth::id() || $order->status !== 'pending') {
+            return redirect()->route('customer.dashboard');
+        }
+
+        return view('checkout.queue', compact('order'));
     }
 
     /**

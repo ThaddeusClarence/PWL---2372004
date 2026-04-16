@@ -79,9 +79,10 @@
 
                 @if($events->count() > 3)
                 <div class="flex justify-center mt-12">
-                    <button id="toggle-events-btn" class="px-10 py-4 bg-white border-2 border-indigo-600 text-indigo-600 font-black rounded-[24px] uppercase tracking-widest text-xs hover:bg-indigo-600 hover:text-white transition-all shadow-xl shadow-indigo-100/30">
-                        Tampilkan Semua Event
-                    </button>
+                    <a href="{{ route('customer.events.all') }}" class="px-10 py-5 bg-white border-2 border-indigo-600 text-indigo-600 font-black rounded-[24px] uppercase tracking-widest text-[10px] hover:bg-indigo-600 hover:text-white transition-all shadow-xl shadow-indigo-100/30 flex items-center gap-3">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
+                        Lihat Semua Riwayat & Daftar Event
+                    </a>
                 </div>
                 @endif
             </div>
@@ -138,6 +139,38 @@
                     <span class="text-4xl font-black text-gray-300">{{ $usedTicketCount }}</span>
                 </div>
             </div>
+
+            {{-- Waiting List Section --}}
+            @auth
+            @if(isset($waitingLists) && $waitingLists->count() > 0)
+            <div class="mb-12">
+                <div class="flex items-center gap-3 mb-6">
+                    <div class="w-1.5 h-6 bg-amber-500 rounded-full"></div>
+                    <h2 class="text-xl font-black text-gray-900">Antrean Waiting List</h2>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    @foreach($waitingLists as $wl)
+                    <div class="bg-white p-6 rounded-[32px] border border-amber-100 shadow-sm flex items-center justify-between gap-4">
+                        <div class="flex items-center gap-4">
+                            <div class="w-12 h-12 bg-amber-50 rounded-2xl flex items-center justify-center text-amber-600">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-gray-900 text-sm truncate max-w-[150px]">{{ $wl->event->title }}</h4>
+                                <p class="text-[10px] font-bold text-amber-600 uppercase tracking-widest">{{ $wl->ticket_type_name }}</p>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <span class="px-3 py-1 bg-amber-50 text-amber-600 rounded-full text-[9px] font-black uppercase tracking-widest border border-amber-100 italic">DALAM ANTREAN</span>
+                            <p class="text-[9px] text-gray-400 font-bold mt-1">{{ $wl->created_at->diffForHumans() }}</p>
+                        </div>
+                    </div>
+                    @endforeach
+                </div>
+            </div>
+            @endif
+            @endauth
+
 
             @if($tickets->count() > 0)
             <div class="space-y-6">

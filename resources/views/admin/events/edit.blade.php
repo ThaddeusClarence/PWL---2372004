@@ -40,28 +40,40 @@
                                 @endforeach
                             </select>
                             @error('category_id')
-                                <p class="text-red-500 text-xs font-bold mt-2 italic">{{ $message }}</p>
+                                <p class="text-red-500 text-[10px] font-bold mt-2">{{ $message }}</p>
                             @enderror
                         </div>
                         <div>
                             <label class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-3" >Lokasi</label>
-                            <input type="text" name="location" value="{{ $event->location }}" required 
+                            <input type="text" name="location" value="{{ old('location', $event->location) }}" required 
                                    class="w-full px-6 py-4 bg-gray-50 border-none rounded-2xl text-sm focus:ring-4 focus:ring-indigo-50 transition outline-none font-bold text-gray-700">
+                            @error('location')
+                                <p class="text-red-500 text-[10px] font-bold mt-2">{{ $message }}</p>
+                            @enderror
                         </div>
                         <div>
                             <label class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-3">Tanggal Event</label>
-                            <input type="date" name="date" value="{{ $event->date }}" required 
+                            <input type="date" name="date" value="{{ old('date', $event->date) }}" required 
                                    class="w-full px-6 py-4 bg-gray-50 border-none rounded-2xl text-sm focus:ring-4 focus:ring-indigo-50 transition outline-none font-bold text-gray-700">
+                            @error('date')
+                                <p class="text-red-500 text-[10px] font-bold mt-2">{{ $message }}</p>
+                            @enderror
                         </div>
                         <div>
                             <label class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-3">Jam Mulai</label>
-                            <input type="time" name="start_time" value="{{ $event->start_time }}" required 
+                            <input type="time" name="start_time" value="{{ old('start_time', $event->start_time) }}" required 
                                    class="w-full px-6 py-4 bg-gray-50 border-none rounded-2xl text-sm focus:ring-4 focus:ring-indigo-50 transition outline-none font-bold text-gray-700">
+                            @error('start_time')
+                                <p class="text-red-500 text-[10px] font-bold mt-2">{{ $message }}</p>
+                            @enderror
                         </div>
                         <div>
                             <label class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-3">Jam Selesai</label>
-                            <input type="time" name="end_time" value="{{ $event->end_time }}" required 
+                            <input type="time" name="end_time" value="{{ old('end_time', $event->end_time) }}" required 
                                    class="w-full px-6 py-4 bg-gray-50 border-none rounded-2xl text-sm focus:ring-4 focus:ring-indigo-50 transition outline-none font-bold text-gray-700">
+                            @error('end_time')
+                                <p class="text-red-500 text-[10px] font-bold mt-2">{{ $message }}</p>
+                            @enderror
                         </div>
 
                         <div class="md:col-span-2 bg-indigo-50/50 p-6 rounded-3xl border border-indigo-100/50">
@@ -72,7 +84,7 @@
                             <select name="organizer_id" class="w-full px-6 py-4 bg-white border border-indigo-100 rounded-2xl text-sm focus:ring-4 focus:ring-indigo-50 transition outline-none font-bold text-gray-700">
                                 <option value="">-- Tetapkan Organizer --</option>
                                 @foreach($organizers as $organizer)
-                                    <option value="{{ $organizer->id }}" {{ $event->organizer_id == $organizer->id ? 'selected' : '' }}>
+                                    <option value="{{ $organizer->id }}" {{ old('organizer_id', $event->organizer_id) == $organizer->id ? 'selected' : '' }}>
                                         {{ $organizer->name }} ({{ $organizer->email }})
                                     </option>
                                 @endforeach
@@ -82,15 +94,24 @@
                         <div class="md:col-span-2">
                              <label class="block text-xs font-black text-gray-400 uppercase tracking-widest mb-3">Banner</label>
                              <input type="file" name="banner" class="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-bold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100">
+                             @error('banner')
+                                <p class="text-red-500 text-[10px] font-bold mt-2">{{ $message }}</p>
+                             @enderror
                         </div>
                     </div>
 
                     {{-- MANAJEMEN TIKET --}}
                     <div class="pt-8 border-t border-gray-100">
-                        <h3 class="text-sm font-black text-gray-900 uppercase tracking-widest mb-6 flex items-center gap-2">
-                            <span class="w-8 h-8 bg-black text-white rounded-lg flex items-center justify-center text-[10px]">TIX</span>
-                            Manajemen Kategori Tiket
-                        </h3>
+                        <div class="flex justify-between items-center mb-6">
+                            <h3 class="text-sm font-black text-gray-900 uppercase tracking-widest flex items-center gap-2">
+                                <span class="w-8 h-8 bg-black text-white rounded-lg flex items-center justify-center text-[10px]">TIX</span>
+                                Manajemen Kategori Tiket
+                            </h3>
+                            <button type="button" onclick="addTicketType()" class="px-4 py-2 bg-indigo-50 text-indigo-600 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-indigo-100 transition flex items-center gap-2">
+                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M12 4v16m8-8H4"></path></svg>
+                                TAMBAH TIPE
+                            </button>
+                        </div>
 
                         <div id="ticket-container" class="space-y-4">
                             @foreach($event->ticketTypes as $index => $type)
@@ -98,23 +119,56 @@
                                 <input type="hidden" name="ticket_ids[]" value="{{ $type->id }}">
                                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                                     <div>
-                                        <label class="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2">Nama Tiket (Contoh: VIP)</label>
-                                        <input type="text" name="ticket_names[]" value="{{ $type->name }}" required class="w-full px-4 py-3 bg-white border-none rounded-xl text-xs font-bold focus:ring-2 focus:ring-indigo-500 transition">
+                                        <label class="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2">Nama Tiket</label>
+                                        <input type="text" name="ticket_names[]" value="{{ old('ticket_names.'.$index, $type->name) }}" required class="w-full px-4 py-3 bg-white border-none rounded-xl text-xs font-bold focus:ring-2 focus:ring-indigo-500 transition">
                                     </div>
                                     <div>
                                         <label class="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2">Harga (Rp)</label>
-                                        <input type="number" name="ticket_prices[]" value="{{ $type->price }}" required class="w-full px-4 py-3 bg-white border-none rounded-xl text-xs font-bold focus:ring-2 focus:ring-indigo-500 transition">
+                                        <input type="number" name="ticket_prices[]" value="{{ old('ticket_prices.'.$index, $type->price) }}" required class="w-full px-4 py-3 bg-white border-none rounded-xl text-xs font-bold focus:ring-2 focus:ring-indigo-500 transition">
                                     </div>
                                     <div>
-                                        <label class="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2">Kuota (QTY)</label>
-                                        <input type="number" name="ticket_quotas[]" value="{{ $type->quota }}" required class="w-full px-4 py-3 bg-white border-none rounded-xl text-xs font-bold focus:ring-2 focus:ring-indigo-500 transition">
+                                        <label class="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2">Kuota</label>
+                                        <input type="number" name="ticket_quotas[]" value="{{ old('ticket_quotas.'.$index, $type->quota) }}" required class="w-full px-4 py-3 bg-white border-none rounded-xl text-xs font-bold focus:ring-2 focus:ring-indigo-500 transition">
                                     </div>
                                 </div>
-                                <p class="text-[9px] text-gray-400 mt-3 italic font-medium">*Tersisa: {{ $type->remaining_quota }} tiket</p>
+                                <div class="flex justify-between items-center mt-3">
+                                    <p class="text-[9px] text-gray-400 italic font-medium">*Tersisa: {{ $type->remaining_quota }} tiket</p>
+                                    <button type="button" onclick="this.parentElement.parentElement.remove()" class="w-6 h-6 bg-red-50 text-red-500 rounded-full flex items-center justify-center hover:bg-red-500 hover:text-white transition shadow-sm border border-red-100">
+                                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M6 18L18 6M6 6l12 12"></path></svg>
+                                    </button>
+                                </div>
                             </div>
                             @endforeach
                         </div>
                     </div>
+
+                    <script>
+                        function addTicketType() {
+                            const container = document.getElementById('ticket-container');
+                            const div = document.createElement('div');
+                            div.className = 'bg-gray-50 p-6 rounded-3xl border border-gray-100 relative group animate-in fade-in slide-in-from-top-4 duration-300';
+                            div.innerHTML = `
+                                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                    <div>
+                                        <label class="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2">Nama Tiket</label>
+                                        <input type="text" name="ticket_names[]" required class="w-full px-4 py-3 bg-white border-none rounded-xl text-xs font-bold focus:ring-2 focus:ring-indigo-500 transition">
+                                    </div>
+                                    <div>
+                                        <label class="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2">Harga (Rp)</label>
+                                        <input type="number" name="ticket_prices[]" required class="w-full px-4 py-3 bg-white border-none rounded-xl text-xs font-bold focus:ring-2 focus:ring-indigo-500 transition">
+                                    </div>
+                                    <div>
+                                        <label class="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2">Kuota</label>
+                                        <input type="number" name="ticket_quotas[]" required class="w-full px-4 py-3 bg-white border-none rounded-xl text-xs font-bold focus:ring-2 focus:ring-indigo-500 transition">
+                                    </div>
+                                </div>
+                                <button type="button" onclick="this.parentElement.remove()" class="absolute -top-1 -right-1 w-6 h-6 bg-red-50 text-red-500 rounded-full flex items-center justify-center hover:bg-red-500 hover:text-white transition shadow-sm border border-red-100">
+                                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M6 18L18 6M6 6l12 12"></path></svg>
+                                </button>
+                            `;
+                            container.appendChild(div);
+                        }
+                    </script>
 
                     <div class="pt-10">
                         <button type="submit" class="w-full py-5 bg-indigo-600 text-white font-black rounded-[28px] hover:bg-black transition shadow-xl shadow-indigo-100 text-sm uppercase tracking-widest">

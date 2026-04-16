@@ -29,10 +29,21 @@ class CustomerController extends Controller
         $activeTicketCount = $tickets->where('is_used', false)->count();
         $usedTicketCount = $tickets->where('is_used', true)->count();
 
-        // Ambil daftar event untuk dibeli (Pindah dari Front Page)
+        // Ambil Daftar Waiting List Saya
+        $waitingLists = WaitingList::where('user_id', $user->id)
+            ->with('event')
+            ->latest()
+            ->get();
+            
         $events = Event::latest()->get();
+            
+        return view('customer.dashboard', compact('orders', 'events', 'activeTicketCount', 'usedTicketCount', 'tickets', 'waitingLists'));
+    }
 
-        return view('customer.dashboard', compact('orders', 'events', 'activeTicketCount', 'usedTicketCount', 'tickets'));
+    public function allEvents()
+    {
+        $events = Event::latest()->paginate(12);
+        return view('customer.events_all', compact('events'));
     }
 
     public function showTicket(Order $order)
